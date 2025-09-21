@@ -1,15 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import {
-  index,
-  pgTableCreator,
-  primaryKey,
-  varchar,
-  text,
-  integer,
-  timestamp,
-  boolean,
-  numeric,
-} from "drizzle-orm/pg-core";
+import { index, pgTableCreator, primaryKey, pgEnum } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -21,8 +11,15 @@ import { type AdapterAccount } from "next-auth/adapters";
 export const createTable = pgTableCreator((name) => `flex-living_${name}`);
 
 // User role enum type
-export const userRoleEnum = ["USER", "ADMIN"] as const;
-export type UserRoleType = (typeof userRoleEnum)[number];
+export const UserRole = {
+  ADMIN: "ADMIN",
+  USER: "USER",
+} as const;
+export const userRoleEnum = pgEnum("flex_living_user_role", [
+  UserRole.ADMIN,
+  UserRole.USER,
+]);
+export type UserRoleType = (typeof UserRole)[keyof typeof UserRole];
 
 // Authentication tables (existing)
 export const users = createTable("user", (d) => ({
@@ -40,11 +37,7 @@ export const users = createTable("user", (d) => ({
     })
     .default(sql`CURRENT_TIMESTAMP`),
   image: d.varchar({ length: 255 }),
-  role: d
-    .varchar({ length: 50 })
-    .$type<UserRoleType>()
-    .notNull()
-    .default("USER"),
+  role: userRoleEnum("role").notNull().default("USER"),
 }));
 
 export const accounts = createTable(
@@ -205,26 +198,4 @@ export const reviewCategoriesRelations = relations(
       references: [reviews.id],
     }),
   }),
-);
-
-// Legacy posts table (to be removed)
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdById: d
-      .varchar({ length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [
-    index("created_by_idx").on(t.createdById),
-    index("name_idx").on(t.name),
-  ],
 );

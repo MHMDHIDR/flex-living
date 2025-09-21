@@ -1,1 +1,0 @@
-ALTER TABLE "flex-living_user" ADD COLUMN "role" varchar(50) DEFAULT 'USER' NOT NULL;
