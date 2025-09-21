@@ -8,6 +8,20 @@
       "when": 1758483726276,
       "tag": "0000_volatile_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758488012059,
+      "tag": "0001_gorgeous_franklin_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758491086935,
+      "tag": "0002_optimal_gunslinger",
+      "breakpoints": true
     }
   ]
 }
