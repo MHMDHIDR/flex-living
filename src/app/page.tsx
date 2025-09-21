@@ -1,28 +1,36 @@
 import { auth } from "@/server/auth";
 import { HydrateClient } from "@/trpc/server";
-import Link from "next/link";
+import { LandingHero } from "@/app/_components/landing/landing-hero";
+import { LandingFeatures } from "@/app/_components/landing/landing-features";
+import { LandingNav } from "@/app/_components/landing/landing-nav";
 
 export default async function Home() {
-  // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await auth();
 
   return (
     <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          {session?.user ? (
-            <div>
-              <p>Hello {session?.user.name}</p>
-              <Link href="/dashboard">Dashboard</Link>
+      <div className="min-h-screen bg-white">
+        {/* Navigation */}
+        <LandingNav session={session} />
+
+        {/* Hero Section */}
+        <LandingHero session={session} />
+
+        {/* Features Section */}
+        <LandingFeatures />
+
+        {/* Footer */}
+        <footer className="border-t bg-gray-50">
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center text-gray-600">
+              <p>
+                &copy; {new Date().getFullYear()} Flex Living. Professional
+                property management made simple.
+              </p>
             </div>
-          ) : (
-            <p>
-              Please sign in to continue:{" "}
-              <Link href="/api/auth/signin">Sign in</Link>
-            </p>
-          )}
-        </div>
-      </main>
+          </div>
+        </footer>
+      </div>
     </HydrateClient>
   );
 }
