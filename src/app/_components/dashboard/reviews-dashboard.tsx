@@ -4,21 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  RefreshCw,
-  Download,
-  CheckCircle,
-  Clock,
-  Star,
-  TrendingUp,
-} from "lucide-react";
+import { RefreshCw, Download, CheckCircle, Clock, Star } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
-import { PerformanceMetrics } from "./performance-metrics";
-import { FilterControls } from "./filter-controls";
-import { ReviewsTable } from "./reviews-table";
-import { PropertyOverview } from "./property-overview";
+import { PerformanceMetrics } from "@/app/_components/dashboard/performance-metrics";
+import { FilterControls } from "@/app/_components/dashboard/filter-controls";
+import { ReviewsTable } from "@/app/_components/dashboard/reviews-table";
+import { PropertyOverview } from "@/app/_components/dashboard/property-overview";
 
 type FilterState = {
   rating?: number[];
