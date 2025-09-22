@@ -1,52 +1,101 @@
 "use client";
 import {
-  Navbar,
+  NavbarWrapper,
   NavBody,
   NavItems,
   MobileNav,
-  NavbarLogo,
   NavbarButton,
   MobileNavHeader,
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
+import type { Session } from "next-auth";
+import Link from "next/link";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
-export function NavbarDemo() {
+interface NavbarProps {
+  session: Session | null;
+}
+
+export function Navbar({ session }: NavbarProps) {
   const navItems = [
     {
-      name: "Features",
-      link: "#features",
+      name: "Home",
+      link: "/",
     },
     {
-      name: "Pricing",
-      link: "#pricing",
+      name: "Dashboard",
+      link: "/dashboard",
     },
     {
-      name: "Contact",
-      link: "#contact",
+      name: "Terms",
+      link: "/terms",
+    },
+    {
+      name: "Privacy",
+      link: "/privacy",
     },
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const maxTwoWordsTwelveCharacters = (name: string | undefined | null) => {
+    if (!name) return ".";
+    return name.split(" ").slice(0, 2).join(" ").slice(0, 12).concat(".");
+  };
+
   return (
     <div className="relative w-full">
-      <Navbar>
+      <NavbarWrapper>
         {/* Desktop Navigation */}
         <NavBody>
-          <NavbarLogo />
+          <Link href="/">
+            <Image
+              src="/logo-slogan.png"
+              alt="Flex Living Logo"
+              width={150}
+              height={150}
+              className="h-10 w-auto"
+            />
+          </Link>
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary">Login</NavbarButton>
-            <NavbarButton variant="primary">Book a call</NavbarButton>
+            {session ? (
+              <>
+                <NavbarButton href="/dashboard" variant="secondary">
+                  Dashboard
+                </NavbarButton>
+                <Badge variant={"secondary"}>
+                  {maxTwoWordsTwelveCharacters(session.user.name)}
+                </Badge>
+                <NavbarButton href="/api/auth/signout" variant="primary">
+                  Sign Out
+                </NavbarButton>
+              </>
+            ) : (
+              <>
+                <NavbarButton href="/api/auth/signin" variant="primary">
+                  Sign In
+                </NavbarButton>
+              </>
+            )}
           </div>
         </NavBody>
 
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
-            <NavbarLogo />
+            <Link href="/">
+              <Image
+                src="/logo-slogan.png"
+                alt="Flex Living Logo"
+                width={150}
+                height={150}
+                className="h-10 w-auto"
+              />
+            </Link>
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -68,124 +117,52 @@ export function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
+              {session ? (
+                <>
+                  <span className="py-2 text-sm text-gray-600 dark:text-gray-300">
+                    Welcome, {session.user.name}
+                  </span>
+                  <NavbarButton
+                    href="/dashboard"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    Dashboard
+                  </NavbarButton>
+                  <NavbarButton
+                    href="/api/auth/signout"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Sign Out
+                  </NavbarButton>
+                </>
+              ) : (
+                <>
+                  <NavbarButton
+                    href="/api/auth/signin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    Sign In
+                  </NavbarButton>
+                  <NavbarButton
+                    href="/api/auth/signin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Get Started
+                  </NavbarButton>
+                </>
+              )}
             </div>
           </MobileNavMenu>
         </MobileNav>
-      </Navbar>
-      <DummyContent />
-
-      {/* Navbar */}
+      </NavbarWrapper>
     </div>
   );
 }
-
-const DummyContent = () => {
-  return (
-    <div className="container mx-auto p-8 pt-24">
-      <h1 className="mb-4 text-center text-3xl font-bold">
-        Check the navbar at the top of the container
-      </h1>
-      <p className="mb-10 text-center text-sm text-zinc-500">
-        For demo purpose we have kept the position as{" "}
-        <span className="font-medium">Sticky</span>. Keep in mind that this
-        component is <span className="font-medium">fixed</span> and will not
-        move when scrolling.
-      </p>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        {[
-          {
-            id: 1,
-            title: "The",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 2,
-            title: "First",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 3,
-            title: "Rule",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 4,
-            title: "Of",
-            width: "md:col-span-3",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 5,
-            title: "F",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 6,
-            title: "Club",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 7,
-            title: "Is",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 8,
-            title: "You",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 9,
-            title: "Do NOT TALK about",
-            width: "md:col-span-2",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-          {
-            id: 10,
-            title: "F Club",
-            width: "md:col-span-1",
-            height: "h-60",
-            bg: "bg-neutral-100 dark:bg-neutral-800",
-          },
-        ].map((box) => (
-          <div
-            key={box.id}
-            className={`${box.width} ${box.height} ${box.bg} flex items-center justify-center rounded-lg p-4 shadow-sm`}
-          >
-            <h2 className="text-xl font-medium">{box.title}</h2>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};

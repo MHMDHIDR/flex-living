@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { fetchHostawayReviews, normalizeReviewData } from "@/lib/hostaway";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Fetch reviews from Hostaway API (or mock data)
     const hostawayData = await fetchHostawayReviews();

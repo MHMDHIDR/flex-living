@@ -114,7 +114,6 @@ export function ReviewsDashboard() {
   };
 
   const handleExport = () => {
-    // TODO: Implement CSV export functionality
     toast.info("Export functionality coming soon");
   };
 
