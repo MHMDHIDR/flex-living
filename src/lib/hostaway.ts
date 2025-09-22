@@ -63,15 +63,17 @@ export async function fetchHostawayReviews(): Promise<HostawayApiResponse> {
     });
 
     if (!response.ok) {
-      console.log("Hostaway API failed, returning mock data for development");
+      console.error(`Hostaway API failed, returning mock data for development`);
       return getMockReviewData();
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as HostawayApiResponse;
     return data;
   } catch (error) {
-    console.error("Hostaway API error:", error);
-    console.log("Returning mock data for development");
+    console.error(
+      `Hostaway API error: ${error as string} \n Returning mock data for development`,
+      error,
+    );
     return getMockReviewData();
   }
 }
@@ -245,8 +247,8 @@ export function extractPropertiesFromReviews(
         id: review.propertyId,
         externalId: review.propertyId, // In real implementation, this would be the Hostaway listing ID
         name: review.propertyName,
-        address: extractAddressFromName(review.propertyName),
-        city: extractCityFromName(review.propertyName),
+        address: extractAddressFromName(review.propertyName) ?? null,
+        city: extractCityFromName(review.propertyName) ?? "London",
         country: "United Kingdom", // Assuming UK properties for Flex Living
         description: `Beautiful property in ${extractCityFromName(review.propertyName)}`,
       });
@@ -265,8 +267,7 @@ function extractAddressFromName(listingName: string): string {
 function extractCityFromName(listingName: string): string {
   // Extract city from listing name
   const address = extractAddressFromName(listingName);
-  const cityMatch = address.match(
-    /(Shoreditch|Camden|Notting Hill|Canary Wharf|London)/i,
-  );
+  const cityRegex = /(Shoreditch|Camden|Notting Hill|Canary Wharf|London)/i;
+  const cityMatch = cityRegex.exec(address);
   return cityMatch ? cityMatch[1]! : "London";
 }

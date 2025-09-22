@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function PropertyHeader() {
   return (
@@ -82,7 +83,7 @@ export function PropertyHeader() {
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
             <div className="flex items-center text-gray-700">
-              <img
+              <Image
                 src="https://flagcdn.com/gb.svg"
                 alt="English"
                 className="mr-2 h-5 w-5"

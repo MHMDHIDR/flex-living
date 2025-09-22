@@ -29,7 +29,7 @@ interface PropertyReviewsProps {
 
 export function PropertyReviews({
   reviews,
-  propertyId,
+  propertyId: _,
   totalCount,
 }: PropertyReviewsProps) {
   // Filter only approved reviews and guest-to-host reviews for public display
@@ -51,7 +51,7 @@ export function PropertyReviews({
               No Reviews Yet
             </h3>
             <p className="text-gray-600">
-              This property hasn't received any approved guest reviews yet.
+              {"This property hasn't received any approved guest reviews yet."}
             </p>
           </div>
         </Card>
@@ -62,7 +62,7 @@ export function PropertyReviews({
   // Calculate average rating from approved reviews
   const ratingsWithValues = approvedReviews
     .map((item) => item.review.rating)
-    .filter((rating) => rating !== null) as number[];
+    .filter((rating) => rating !== null);
 
   const averageRating =
     ratingsWithValues.length > 0

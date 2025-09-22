@@ -13,11 +13,11 @@ import {
 import { Filter, X, Calendar, Star } from "lucide-react";
 import { api } from "@/trpc/react";
 
-type FilterState = {
+export type FilterState = {
   rating?: number[];
-  channel?: string;
-  reviewType?: string;
-  status?: string;
+  channel?: "hostaway" | "google" | "airbnb";
+  reviewType?: "host-to-guest" | "guest-to-host";
+  status?: "published" | "pending" | "draft";
   isApproved?: boolean;
   propertyId?: string;
   dateRange?: {
@@ -35,25 +35,27 @@ interface FilterControlsProps {
 export function FilterControls({
   filters,
   onFiltersChange,
-  isLoading,
 }: FilterControlsProps) {
   const [showFilters, setShowFilters] = useState(false);
 
   // Get property options for the select
   const { data: propertiesData } = api.properties.getOptions.useQuery();
 
-  const handleFilterChange = (key: keyof FilterState, value: any) => {
+  const handleFilterChange = <K extends keyof FilterState>(
+    key: K,
+    value: FilterState[K] | "all",
+  ) => {
     const newFilters = { ...filters };
     if (value === "all" || value === "" || value === undefined) {
       delete newFilters[key];
     } else {
-      newFilters[key] = value;
+      newFilters[key] = value as FilterState[typeof key];
     }
     onFiltersChange(newFilters);
   };
 
   const handleRatingFilter = (rating: number) => {
-    const currentRatings = filters.rating || [];
+    const currentRatings = filters.rating ?? [];
     const newRatings = currentRatings.includes(rating)
       ? currentRatings.filter((r) => r !== rating)
       : [...currentRatings, rating];
@@ -167,7 +169,7 @@ export function FilterControls({
               <Badge variant="outline" className="gap-1">
                 Property:{" "}
                 {propertiesData?.find((p) => p.id === filters.propertyId)
-                  ?.name || "Selected"}
+                  ?.name ?? "Selected"}
                 <button
                   onClick={() => handleFilterChange("propertyId", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
@@ -206,8 +208,10 @@ export function FilterControls({
             <div className="space-y-2">
               <Label className="text-sm font-medium">Channel</Label>
               <Select
-                value={filters.channel || "all"}
-                onValueChange={(value) => handleFilterChange("channel", value)}
+                value={filters.channel ?? "all"}
+                onValueChange={(
+                  value: "all" | "hostaway" | "google" | "airbnb",
+                ) => handleFilterChange("channel", value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="All channels" />
@@ -225,10 +229,10 @@ export function FilterControls({
             <div className="space-y-2">
               <Label className="text-sm font-medium">Review Type</Label>
               <Select
-                value={filters.reviewType || "all"}
-                onValueChange={(value) =>
-                  handleFilterChange("reviewType", value)
-                }
+                value={filters.reviewType ?? "all"}
+                onValueChange={(
+                  value: "all" | "host-to-guest" | "guest-to-host",
+                ) => handleFilterChange("reviewType", value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="All types" />
@@ -245,8 +249,10 @@ export function FilterControls({
             <div className="space-y-2">
               <Label className="text-sm font-medium">Status</Label>
               <Select
-                value={filters.status || "all"}
-                onValueChange={(value) => handleFilterChange("status", value)}
+                value={filters.status ?? "all"}
+                onValueChange={(
+                  value: "all" | "published" | "pending" | "draft",
+                ) => handleFilterChange("status", value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="All statuses" />
@@ -264,7 +270,7 @@ export function FilterControls({
             <div className="space-y-2">
               <Label className="text-sm font-medium">Property</Label>
               <Select
-                value={filters.propertyId || "all"}
+                value={filters.propertyId ?? "all"}
                 onValueChange={(value) =>
                   handleFilterChange("propertyId", value)
                 }

@@ -24,7 +24,7 @@ interface PropertyBookingProps {
   };
 }
 
-export function PropertyBooking({ property }: PropertyBookingProps) {
+export function PropertyBooking({ property: _ }: PropertyBookingProps) {
   return (
     <div className="space-y-6">
       {/* Booking Form Card */}
@@ -124,7 +124,7 @@ export function PropertyBooking({ property }: PropertyBookingProps) {
             </Button>
 
             <div className="text-center text-xs text-gray-500">
-              You won't be charged yet
+              {"You won't be charged yet"}
             </div>
           </div>
         </div>

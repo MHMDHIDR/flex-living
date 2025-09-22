@@ -9,22 +9,12 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
 import { PerformanceMetrics } from "@/app/_components/dashboard/performance-metrics";
-import { FilterControls } from "@/app/_components/dashboard/filter-controls";
+import {
+  FilterControls,
+  type FilterState,
+} from "@/app/_components/dashboard/filter-controls";
 import { ReviewsTable } from "@/app/_components/dashboard/reviews-table";
 import { PropertyOverview } from "@/app/_components/dashboard/property-overview";
-
-type FilterState = {
-  rating?: number[];
-  channel?: string;
-  reviewType?: string;
-  status?: string;
-  isApproved?: boolean;
-  propertyId?: string;
-  dateRange?: {
-    from?: Date;
-    to?: Date;
-  };
-};
 
 type PaginationState = {
   page: number;
@@ -64,11 +54,11 @@ export function ReviewsDashboard() {
 
   // tRPC mutations
   const syncMutation = api.reviews.syncFromHostaway.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success(
         `Successfully synced ${data.reviewsCount} reviews from ${data.propertiesCount} properties`,
       );
-      refetchReviews();
+      await refetchReviews();
     },
     onError: (error) => {
       toast.error(`Failed to sync reviews: ${error.message}`);
@@ -76,12 +66,12 @@ export function ReviewsDashboard() {
   });
 
   const bulkApprovalMutation = api.reviews.bulkUpdateApproval.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success(
         `${data.isApproved ? "Approved" : "Disapproved"} ${data.updatedCount} reviews`,
       );
       setSelectedReviews([]);
-      refetchReviews();
+      await refetchReviews();
     },
     onError: (error) => {
       toast.error(`Failed to update reviews: ${error.message}`);
@@ -150,18 +140,18 @@ export function ReviewsDashboard() {
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 text-yellow-500" />
             <span>
-              {metricsData?.averageRating?.toFixed(1) || "0.0"} avg rating
+              {metricsData?.averageRating?.toFixed(1) ?? "0.0"} avg rating
             </span>
           </div>
           <div className="flex items-center gap-1">
             <CheckCircle className="h-4 w-4 text-green-500" />
-            <span>{metricsData?.approvedReviews || 0} approved</span>
+            <span>{metricsData?.approvedReviews ?? 0} approved</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="h-4 w-4 text-orange-500" />
             <span>
-              {(metricsData?.totalReviews || 0) -
-                (metricsData?.approvedReviews || 0)}{" "}
+              {(metricsData?.totalReviews ?? 0) -
+                (metricsData?.approvedReviews ?? 0)}{" "}
               pending
             </span>
           </div>

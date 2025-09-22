@@ -20,8 +20,8 @@ export function PropertyInfo({ property }: PropertyInfoProps) {
 
   // Default description if none provided
   const description =
-    property.description ||
-    `Located in ${property.city || "a prime location"}, this apartment is a great choice for anyone looking for comfort and convenience. It's a spacious unit with top-notch amenities to make your stay hassle-free. The area is perfect, with plenty of transport options and local spots to explore. I take pride in keeping the place in...`;
+    property.description ??
+    `Located in ${property.city ?? "a prime location"}, this apartment is a great choice for anyone looking for comfort and convenience. It's a spacious unit with top-notch amenities to make your stay hassle-free. The area is perfect, with plenty of transport options and local spots to explore. I take pride in keeping the place in...`;
 
   const shouldShowReadMore = description.length > 200;
   const displayText =
@@ -53,7 +53,7 @@ export function PropertyInfo({ property }: PropertyInfoProps) {
       </div>
 
       {/* Property Details */}
-      {(property.address || property.city) && (
+      {(property.address ?? property.city) && (
         <div className="border-t border-gray-200 pt-4">
           <div className="space-y-2">
             {property.address && (

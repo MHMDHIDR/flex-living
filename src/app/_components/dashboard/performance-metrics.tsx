@@ -6,7 +6,6 @@ import {
   Star,
   MessageCircle,
   CheckCircle,
-  TrendingUp,
   Clock,
   BarChart3,
 } from "lucide-react";
@@ -31,7 +30,7 @@ export function PerformanceMetrics({
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {[...Array(4)].map((_, i) => (
+        {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i} className="p-6">
             <div className="animate-pulse">
               <div className="mb-2 h-4 w-1/2 rounded bg-gray-200"></div>
@@ -47,7 +46,7 @@ export function PerformanceMetrics({
   const metrics = [
     {
       title: "Total Reviews",
-      value: data?.totalReviews || 0,
+      value: data?.totalReviews ?? 0,
       subtitle: "All time",
       icon: MessageCircle,
       color: "text-blue-600",
@@ -55,7 +54,7 @@ export function PerformanceMetrics({
     },
     {
       title: "Average Rating",
-      value: data?.averageRating?.toFixed(1) || "0.0",
+      value: data?.averageRating?.toFixed(1) ?? "0.0",
       subtitle: "Out of 5 stars",
       icon: Star,
       color: "text-yellow-600",
@@ -63,15 +62,15 @@ export function PerformanceMetrics({
     },
     {
       title: "Approved Reviews",
-      value: data?.approvedReviews || 0,
-      subtitle: `${data?.approvalRate?.toFixed(1) || 0}% approval rate`,
+      value: data?.approvedReviews ?? 0,
+      subtitle: `${data?.approvalRate?.toFixed(1) ?? 0}% approval rate`,
       icon: CheckCircle,
       color: "text-green-600",
       bgColor: "bg-green-100",
     },
     {
       title: "Pending Reviews",
-      value: (data?.totalReviews || 0) - (data?.approvedReviews || 0),
+      value: (data?.totalReviews ?? 0) - (data?.approvedReviews ?? 0),
       subtitle: "Awaiting approval",
       icon: Clock,
       color: "text-orange-600",

@@ -117,7 +117,7 @@ export function ReviewsTable({
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allIds = data?.reviews.map((item) => item.review.id) || [];
+      const allIds = data?.reviews.map((item) => item.review.id) ?? [];
       onSelectionChange(allIds);
     } else {
       onSelectionChange([]);
@@ -197,7 +197,7 @@ export function ReviewsTable({
         <div className="animate-pulse space-y-4">
           <div className="h-8 w-1/4 rounded bg-gray-200"></div>
           <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
+            {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="h-12 rounded bg-gray-100"></div>
             ))}
           </div>
@@ -226,7 +226,6 @@ export function ReviewsTable({
   const isAllSelected =
     data.reviews.length > 0 &&
     data.reviews.every((item) => selectedReviews.includes(item.review.id));
-  const isPartiallySelected = selectedReviews.length > 0 && !isAllSelected;
 
   return (
     <Card>
@@ -266,7 +265,6 @@ export function ReviewsTable({
                 <TableHead className="w-12">
                   <Checkbox
                     checked={isAllSelected}
-                    indeterminate={isPartiallySelected}
                     onCheckedChange={handleSelectAll}
                   />
                 </TableHead>
@@ -317,7 +315,7 @@ export function ReviewsTable({
                           className="max-w-32 truncate font-medium"
                           title={property?.name}
                         >
-                          {property?.name || "Unknown Property"}
+                          {property?.name ?? "Unknown Property"}
                         </div>
                         {property?.city && (
                           <div className="text-sm text-gray-500">

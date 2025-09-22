@@ -12,7 +12,7 @@ import {
 type PropertyWithStats = {
   id: string;
   name: string;
-  city?: string;
+  city?: string | null;
   stats: {
     totalReviews: number;
     approvedReviews: number;
@@ -39,7 +39,7 @@ export function PropertyOverview({
         <div className="animate-pulse">
           <div className="mb-4 h-6 w-1/4 rounded bg-gray-200"></div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(3)].map((_, i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="rounded-lg border p-4">
                 <div className="mb-2 h-4 w-3/4 rounded bg-gray-200"></div>
                 <div className="mb-3 h-3 w-1/2 rounded bg-gray-200"></div>

@@ -53,7 +53,7 @@ export const propertiesRouter = createTRPCRouter({
 
       const channelDistribution = reviewsData.reduce(
         (acc, review) => {
-          acc[review.channel] = (acc[review.channel] || 0) + 1;
+          acc[review.channel] = (acc[review.channel] ?? 0) + 1;
           return acc;
         },
         {} as Record<string, number>,

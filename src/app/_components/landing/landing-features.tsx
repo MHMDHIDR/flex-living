@@ -4,7 +4,6 @@ import {
   Filter,
   CheckCircle,
   Building2,
-  Star,
   Globe,
   Clock,
   TrendingUp,

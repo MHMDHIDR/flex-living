@@ -1,4 +1,3 @@
-import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
 import { PropertyHeader } from "@/app/_components/property/property-header";
 import { PropertyGallery } from "@/app/_components/property/property-gallery";
@@ -18,13 +17,12 @@ interface PropertyPageProps {
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { id } = await params;
-  const session = await auth();
 
   // Get property details
   let property;
   try {
     property = await api.properties.getById({ id });
-  } catch (error) {
+  } catch {
     notFound();
   }
 

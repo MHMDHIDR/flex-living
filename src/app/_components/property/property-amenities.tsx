@@ -5,7 +5,6 @@ import {
   ChefHat,
   Zap,
   Shield,
-  Car,
   Wind,
   ChevronRight,
 } from "lucide-react";

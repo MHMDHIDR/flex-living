@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Grid, Eye } from "lucide-react";
+import Image from "next/image";
 
 interface PropertyGalleryProps {
   property: {
@@ -9,7 +10,7 @@ interface PropertyGalleryProps {
   };
 }
 
-export function PropertyGallery({ property }: PropertyGalleryProps) {
+export function PropertyGallery({ property: _ }: PropertyGalleryProps) {
   // Mock gallery images - in production, these would come from the property data
   const galleryImages = [
     {
@@ -45,7 +46,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
   ];
 
   const mainImage =
-    galleryImages.find((img) => img.isMain) || galleryImages[0]!;
+    galleryImages.find((img) => img.isMain) ?? galleryImages[0]!;
   const thumbnailImages = galleryImages
     .filter((img) => !img.isMain)
     .slice(0, 4);
@@ -57,7 +58,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
         {/* Main Image */}
         <div className="md:col-span-2 md:row-span-2">
           <div className="relative aspect-[4/3] md:aspect-auto md:h-full">
-            <img
+            <Image
               src={mainImage.url}
               alt={mainImage.alt}
               className="h-full w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
@@ -69,7 +70,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
         {thumbnailImages.map((image, index) => (
           <div key={image.id} className="relative">
             <div className="aspect-[4/3]">
-              <img
+              <Image
                 src={image.url}
                 alt={image.alt}
                 className="h-full w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"

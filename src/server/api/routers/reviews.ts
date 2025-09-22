@@ -7,7 +7,6 @@ import {
   fetchHostawayReviews,
   normalizeReviewData,
   extractPropertiesFromReviews,
-  type NormalizedReview,
 } from "@/lib/hostaway";
 
 // Input validation schemas
@@ -54,8 +53,8 @@ export const reviewsRouter = createTRPCRouter({
             externalId: property.externalId,
             name: property.name,
             address: property.address,
-            city: property.city,
-            country: property.country,
+            city: property.city ?? "London",
+            country: property.country ?? null,
             description: property.description,
           })
           .onConflictDoUpdate({
@@ -399,7 +398,7 @@ export const reviewsRouter = createTRPCRouter({
 
       const channelDistribution = reviewsData.reduce(
         (acc, review) => {
-          acc[review.channel] = (acc[review.channel] || 0) + 1;
+          acc[review.channel] = (acc[review.channel] ?? 0) + 1;
           return acc;
         },
         {} as Record<string, number>,
