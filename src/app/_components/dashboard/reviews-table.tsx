@@ -292,138 +292,164 @@ export function ReviewsTable({
                 const isExpanded = expandedReview === review.id;
 
                 return (
-                  <TableRow
-                    key={review.id}
-                    className={isSelected ? "bg-blue-50" : ""}
-                  >
-                    <TableCell>
-                      <Checkbox
-                        checked={isSelected}
-                        onCheckedChange={(checked) =>
-                          handleSelectRow(review.id, checked as boolean)
-                        }
-                      />
-                    </TableCell>
+                  <>
+                    <TableRow
+                      key={review.id}
+                      className={isSelected ? "bg-blue-50" : ""}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={(checked) =>
+                            handleSelectRow(review.id, checked as boolean)
+                          }
+                        />
+                      </TableCell>
 
-                    <TableCell className="font-medium">
-                      {review.guestName}
-                    </TableCell>
+                      <TableCell className="font-medium">
+                        {review.guestName}
+                      </TableCell>
 
-                    <TableCell>
-                      <div>
-                        <div
-                          className="max-w-32 truncate font-medium"
-                          title={property?.name}
-                        >
-                          {property?.name ?? "Unknown Property"}
-                        </div>
-                        {property?.city && (
-                          <div className="text-sm text-gray-500">
-                            {property.city}
+                      <TableCell>
+                        <div>
+                          <div
+                            className="max-w-32 truncate font-medium"
+                            title={property?.name}
+                          >
+                            {property?.name ?? "Unknown Property"}
                           </div>
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell>{renderStars(review.rating)}</TableCell>
-
-                    <TableCell className="max-w-xs">
-                      <div className="space-y-1">
-                        <div className="text-sm">
-                          {isExpanded
-                            ? review.comment
-                            : `${review.comment.slice(0, 100)}${review.comment.length > 100 ? "..." : ""}`}
+                          {property?.city && (
+                            <div className="text-sm text-gray-500">
+                              {property.city}
+                            </div>
+                          )}
                         </div>
-                        {review.comment.length > 100 && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-auto p-0 text-blue-600 hover:bg-transparent"
-                            onClick={() =>
-                              setExpandedReview(isExpanded ? null : review.id)
-                            }
-                          >
-                            <Eye className="mr-1 h-3 w-3" />
-                            {isExpanded ? "Show less" : "Read more"}
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
+                      </TableCell>
 
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={
-                          review.channel === "hostaway"
-                            ? "border-blue-200 text-blue-700"
-                            : review.channel === "google"
-                              ? "border-red-200 text-red-700"
-                              : "border-pink-200 text-pink-700"
-                        }
+                      <TableCell>{renderStars(review.rating)}</TableCell>
+
+                      <TableCell className="max-w-xs">
+                        <div className="space-y-1">
+                          <div className="text-sm">
+                            {isExpanded
+                              ? ""
+                              : `${review.comment.slice(0, 30)}${review.comment.length > 30 ? "..." : ""}`}
+                          </div>
+                          {review.comment.length > 30 && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-auto p-0 text-blue-600 hover:bg-transparent"
+                              onClick={() =>
+                                setExpandedReview(isExpanded ? null : review.id)
+                              }
+                            >
+                              <Eye className="mr-1 h-3 w-3" />
+                              {isExpanded ? "Show less" : "Read more"}
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={
+                            review.channel === "hostaway"
+                              ? "border-blue-200 text-blue-700"
+                              : review.channel === "google"
+                                ? "border-red-200 text-red-700"
+                                : "border-pink-200 text-pink-700"
+                          }
+                        >
+                          {review.channel}
+                        </Badge>
+                      </TableCell>
+
+                      <TableCell>
+                        <Badge variant="secondary" className="text-xs">
+                          {review.reviewType.replace("-", " ")}
+                        </Badge>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(review.submittedAt)}
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          {review.isApproved ? (
+                            <Badge className="border-green-200 bg-green-100 text-green-800">
+                              <CheckCircle className="mr-1 h-3 w-3" />
+                              Approved
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className="border-orange-200 text-orange-700"
+                            >
+                              <Clock className="mr-1 h-3 w-3" />
+                              Pending
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex gap-1">
+                          {!review.isApproved ? (
+                            <Button
+                              size="sm"
+                              onClick={() => handleApproval(review.id, true)}
+                              disabled={approvalMutation.isPending}
+                              className="h-8 bg-green-600 hover:bg-green-700"
+                            >
+                              <CheckCircle className="mr-1 h-3 w-3" />
+                              Approve
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleApproval(review.id, false)}
+                              disabled={approvalMutation.isPending}
+                              className="h-8"
+                            >
+                              <Clock className="mr-1 h-3 w-3" />
+                              Revoke
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+
+                    {/* Expanded Review Row */}
+                    {isExpanded && (
+                      <TableRow
+                        key={`${review.id}-expanded`}
+                        className={isSelected ? "bg-blue-50" : ""}
                       >
-                        {review.channel}
-                      </Badge>
-                    </TableCell>
-
-                    <TableCell>
-                      <Badge variant="secondary" className="text-xs">
-                        {review.reviewType.replace("-", " ")}
-                      </Badge>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
-                        <Calendar className="h-3 w-3" />
-                        {formatDate(review.submittedAt)}
-                      </div>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        {review.isApproved ? (
-                          <Badge className="border-green-200 bg-green-100 text-green-800">
-                            <CheckCircle className="mr-1 h-3 w-3" />
-                            Approved
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="outline"
-                            className="border-orange-200 text-orange-700"
-                          >
-                            <Clock className="mr-1 h-3 w-3" />
-                            Pending
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex gap-1">
-                        {!review.isApproved ? (
-                          <Button
-                            size="sm"
-                            onClick={() => handleApproval(review.id, true)}
-                            disabled={approvalMutation.isPending}
-                            className="h-8 bg-green-600 hover:bg-green-700"
-                          >
-                            <CheckCircle className="mr-1 h-3 w-3" />
-                            Approve
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleApproval(review.id, false)}
-                            disabled={approvalMutation.isPending}
-                            className="h-8"
-                          >
-                            <Clock className="mr-1 h-3 w-3" />
-                            Revoke
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                        <TableCell colSpan={10} className="px-4 py-3">
+                          <div className="rounded-lg bg-gray-50 p-4">
+                            <div className="mb-2 flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">
+                                Full Review
+                              </Badge>
+                              <span className="text-xs text-gray-500">
+                                by {review.guestName}
+                              </span>
+                            </div>
+                            <div className="text-sm leading-relaxed text-gray-700">
+                              {review.comment}
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 );
               })}
             </TableBody>

@@ -6,7 +6,10 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "motion/react";
+import type { Session } from "next-auth";
 import Image from "next/image";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 import React, { useRef, useState } from "react";
 
@@ -28,6 +31,7 @@ interface NavItemsProps {
   }[];
   className?: string;
   onItemClick?: () => void;
+  session?: Session | null;
 }
 
 interface MobileNavProps {
@@ -100,7 +104,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         boxShadow: visible
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
-        width: visible ? "60%" : "100%",
+        width: visible ? "75%" : "100%",
         y: 0,
       }}
       transition={{
@@ -122,8 +126,18 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   );
 };
 
-export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
+export const NavItems = ({
+  items,
+  className,
+  onItemClick,
+  session,
+}: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+
+  const maxTwoWordsTwelveCharacters = (name: string | undefined | null) => {
+    if (!name) return ".";
+    return name.split(" ").slice(0, 2).join(" ").slice(0, 12).concat(".");
+  };
 
   return (
     <motion.div
@@ -134,7 +148,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => (
-        <a
+        <Link
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
           className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
@@ -148,8 +162,21 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
             />
           )}
           <span className="relative z-20">{item.name}</span>
-        </a>
+        </Link>
       ))}
+      {session ? (
+        <>
+          <NavbarButton href="/dashboard" variant="secondary">
+            Dashboard
+          </NavbarButton>
+          <Badge variant={"secondary"}>
+            {maxTwoWordsTwelveCharacters(session.user.name)}
+          </Badge>
+          <NavbarButton href="/api/auth/signout" variant="primary">
+            Sign Out
+          </NavbarButton>
+        </>
+      ) : null}
     </motion.div>
   );
 };

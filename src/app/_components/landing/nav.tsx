@@ -13,8 +13,6 @@ import { useState } from "react";
 import type { Session } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-
 interface NavbarProps {
   session: Session | null;
 }
@@ -45,11 +43,6 @@ export function Navbar({ session }: NavbarProps) {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const maxTwoWordsTwelveCharacters = (name: string | undefined | null) => {
-    if (!name) return ".";
-    return name.split(" ").slice(0, 2).join(" ").slice(0, 12).concat(".");
-  };
-
   return (
     <div className="relative w-full">
       <NavbarWrapper>
@@ -64,27 +57,14 @@ export function Navbar({ session }: NavbarProps) {
               className="h-10 w-auto"
             />
           </Link>
-          <NavItems items={navItems} />
+          <NavItems items={navItems} session={session} />
+
           <div className="flex items-center gap-4">
-            {session ? (
-              <>
-                <NavbarButton href="/dashboard" variant="secondary">
-                  Dashboard
-                </NavbarButton>
-                <Badge variant={"secondary"}>
-                  {maxTwoWordsTwelveCharacters(session.user.name)}
-                </Badge>
-                <NavbarButton href="/api/auth/signout" variant="primary">
-                  Sign Out
-                </NavbarButton>
-              </>
-            ) : (
-              <>
-                <NavbarButton href="/api/auth/signin" variant="primary">
-                  Sign In
-                </NavbarButton>
-              </>
-            )}
+            {!session ? (
+              <NavbarButton href="/api/auth/signin" variant="primary">
+                Sign In
+              </NavbarButton>
+            ) : null}
           </div>
         </NavBody>
 
@@ -111,14 +91,14 @@ export function Navbar({ session }: NavbarProps) {
             onClose={() => setIsMobileMenuOpen(false)}
           >
             {navItems.map((item, idx) => (
-              <a
+              <Link
                 key={`mobile-link-${idx}`}
                 href={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="relative text-neutral-600 dark:text-neutral-300"
               >
                 <span className="block">{item.name}</span>
-              </a>
+              </Link>
             ))}
             <div className="flex w-full flex-col gap-4">
               {session ? (
