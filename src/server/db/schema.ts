@@ -95,7 +95,7 @@ export const properties = createTable(
     externalId: d.varchar({ length: 255 }).notNull(), // Hostaway listing ID
     name: d.varchar({ length: 500 }).notNull(),
     address: d.varchar({ length: 500 }),
-    city: d.varchar({ length: 255 }),
+    city: d.varchar({ length: 255 }).notNull(),
     country: d.varchar({ length: 255 }),
     description: d.text(),
     createdAt: d

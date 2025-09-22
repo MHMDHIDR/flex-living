@@ -11,25 +11,30 @@ import { PropertyReviews } from "@/app/_components/property/property-reviews";
 import { notFound } from "next/navigation";
 
 interface PropertyPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
+  const { id } = await params;
   const session = await auth();
 
   // Get property details
   let property;
   try {
-    property = await api.properties.getById({ id: params.id });
+    property = await api.properties.getById({ id });
   } catch (error) {
+    notFound();
+  }
+
+  if (!property.property) {
     notFound();
   }
 
   // Get approved reviews for this property
   const reviews = await api.reviews.getByProperty({
-    propertyId: params.id,
+    propertyId: id,
     onlyApproved: true,
     limit: 10,
   });
@@ -114,7 +119,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               {/* Reviews Section - Only show approved reviews */}
               <PropertyReviews
                 reviews={reviews.reviews}
-                propertyId={params.id}
+                propertyId={id}
                 totalCount={reviews.reviews.length}
               />
             </div>
