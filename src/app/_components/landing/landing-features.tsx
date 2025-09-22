@@ -122,7 +122,7 @@ export function LandingFeatures() {
           </div>
 
           {/* Process Section */}
-          <div className="rounded-2xl bg-white p-8 shadow-lg">
+          <div className="rounded-2xl bg-white p-8 shadow-lg" id="how-it-works">
             <div className="mb-8 text-center">
               <h3 className="mb-2 text-2xl font-bold text-gray-900">
                 How It Works

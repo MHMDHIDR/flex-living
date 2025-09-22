@@ -26,8 +26,12 @@ export function Navbar({ session }: NavbarProps) {
       link: "/",
     },
     {
-      name: "Dashboard",
-      link: "/dashboard",
+      name: "Features",
+      link: "/#features",
+    },
+    {
+      name: "How It Works",
+      link: "/#how-it-works",
     },
     {
       name: "Terms",

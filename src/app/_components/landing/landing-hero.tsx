@@ -35,9 +35,6 @@ export function LandingHero({ session }: LandingHeroProps) {
                     Go to Dashboard
                   </Button>
                 </Link>
-                <span className="self-center text-sm text-gray-600">
-                  Welcome back, {session.user.name}!
-                </span>
               </div>
             ) : (
               <>
