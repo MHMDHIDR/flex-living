@@ -213,9 +213,9 @@ export function normalizeReviewData(
   });
 }
 
+// Create a consistent property ID based on listing name
+// This is a simple hash function - In production I'm going to use proper property mapping
 function generatePropertyId(listingName: string): string {
-  // Create a consistent property ID based on listing name
-  // This is a simple hash function - in production you'd want proper property mapping
   return listingName
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "-")

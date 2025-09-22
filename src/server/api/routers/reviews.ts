@@ -59,7 +59,7 @@ export const reviewsRouter = createTRPCRouter({
             description: property.description,
           })
           .onConflictDoUpdate({
-            target: properties.id,
+            target: properties.externalId,
             set: {
               name: property.name,
               address: property.address,

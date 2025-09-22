@@ -1,0 +1,1 @@
+ALTER TABLE "flex-living_property" ALTER COLUMN "city" SET NOT NULL;

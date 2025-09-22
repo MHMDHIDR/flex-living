@@ -288,7 +288,8 @@ Good luck and think like a product owner!
 2. **Performance Optimizations**
    - Image optimization
    - Bundle size reduction
-   - Database query optimization
+
+- Database query optimization
 
 ---
 

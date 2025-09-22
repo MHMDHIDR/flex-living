@@ -1,12 +1,12 @@
 import { relations, sql } from "drizzle-orm";
-import { index, pgTableCreator, primaryKey, pgEnum } from "drizzle-orm/pg-core";
+import { index, pgTableCreator, primaryKey, pgEnum, unique } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
  *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
+ * @see https://orm.drizzle.team/docs/goodies\#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `flex-living_${name}`);
 
@@ -107,6 +107,7 @@ export const properties = createTable(
   (t) => [
     index("property_external_id_idx").on(t.externalId),
     index("property_name_idx").on(t.name),
+    unique("property_external_id_unique").on(t.externalId),
   ],
 );
 
@@ -142,6 +143,7 @@ export const reviews = createTable(
     index("review_is_approved_idx").on(t.isApproved),
     index("review_submitted_at_idx").on(t.submittedAt),
     index("review_external_id_idx").on(t.externalId),
+    unique("review_external_id_unique").on(t.externalId),
   ],
 );
 
@@ -161,6 +163,7 @@ export const reviewCategories = createTable(
   (t) => [
     index("review_category_review_id_idx").on(t.reviewId),
     index("review_category_category_idx").on(t.category),
+    unique("review_category_id_unique").on(t.id),
   ],
 );
 
