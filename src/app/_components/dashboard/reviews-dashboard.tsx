@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, Download, CheckCircle, Clock, Star } from "lucide-react";
+import { RefreshCw, CheckCircle, Clock, Star } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
@@ -104,10 +104,6 @@ export function ReviewsDashboard() {
     setPagination((prev) => ({ ...prev, ...newPagination }));
   };
 
-  const handleExport = () => {
-    toast.info("Export functionality coming soon");
-  };
-
   const isLoading = reviewsLoading || metricsLoading || propertiesLoading;
 
   return (
@@ -124,15 +120,6 @@ export function ReviewsDashboard() {
               className={`mr-2 h-4 w-4 ${syncMutation.isPending ? "animate-spin" : ""}`}
             />
             Sync Reviews
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={handleExport}
-            disabled={!reviewsData?.reviews?.length}
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Export
           </Button>
         </div>
 

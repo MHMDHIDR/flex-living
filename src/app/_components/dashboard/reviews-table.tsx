@@ -29,10 +29,13 @@ import {
   Clock,
   Eye,
   Calendar,
+  Download,
+  Loader2,
 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import React from "react";
+import { exportReviewsToCSV } from "@/lib/csv-export";
 
 type PaginationState = {
   page: number;
@@ -90,6 +93,7 @@ export function ReviewsTable({
   onRefetch,
 }: ReviewsTableProps) {
   const [expandedReview, setExpandedReview] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Individual approval mutation
   const approvalMutation = api.reviews.updateApproval.useMutation({
@@ -135,6 +139,47 @@ export function ReviewsTable({
 
   const handleApproval = (reviewId: string, isApproved: boolean) => {
     approvalMutation.mutate({ reviewId, isApproved });
+  };
+
+  const handleExport = async () => {
+    if (!data?.reviews || data.reviews.length === 0) {
+      toast.error("No reviews to export");
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      // Filter reviews based on selection - if none selected, export all visible
+      const reviewsToExport =
+        selectedReviews.length > 0
+          ? data.reviews.filter((item) =>
+              selectedReviews.includes(item.review.id),
+            )
+          : data.reviews;
+
+      if (reviewsToExport.length === 0) {
+        toast.error("No reviews selected for export");
+        return;
+      }
+
+      // Add small delay to show loading state
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      const timestamp = new Date().toISOString().split("T")[0];
+      const filename =
+        selectedReviews.length > 0
+          ? `selected-reviews-${timestamp}`
+          : `all-reviews-${timestamp}`;
+
+      exportReviewsToCSV(reviewsToExport, filename);
+
+      toast.success(`Successfully exported ${reviewsToExport.length} reviews`);
+    } catch (error) {
+      console.error("Export failed:", error);
+      toast.error("Failed to export reviews");
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const renderStars = (rating: number | null) => {
@@ -236,26 +281,49 @@ export function ReviewsTable({
             Reviews ({data.totalCount})
           </h3>
 
-          {/* Per Page Selector */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Show:</span>
-            <Select
-              value={pagination.limit.toString()}
-              onValueChange={(value) =>
-                onPaginationChange({ limit: parseInt(value), page: 1 })
-              }
+          {/* Controls */}
+          <div className="flex items-center gap-4">
+            {/* Export Button */}
+            <Button
+              onClick={handleExport}
+              disabled={isExporting || !data?.reviews?.length}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
             >
-              <SelectTrigger className="w-20">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-              </SelectContent>
-            </Select>
-            <span className="text-sm text-gray-600">per page</span>
+              {isExporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              {isExporting
+                ? "Exporting..."
+                : selectedReviews.length > 0
+                  ? `Export Selected (${selectedReviews.length})`
+                  : `Export All (${data.totalCount})`}
+            </Button>
+
+            {/* Per Page Selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Show:</span>
+              <Select
+                value={pagination.limit.toString()}
+                onValueChange={(value) =>
+                  onPaginationChange({ limit: parseInt(value), page: 1 })
+                }
+              >
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-gray-600">per page</span>
+            </div>
           </div>
         </div>
 
