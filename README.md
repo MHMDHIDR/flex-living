@@ -53,60 +53,120 @@ While Express.js is robust, for this project scale tRPC provides:
 ## 📁 Project Structure
 
 ```
-flex-living-reviews/
-├── src/
-│   ├── app/                          # Next.js App Router
-│   │   ├── dashboard/
-│   │   │   └── page.tsx             # Manager Dashboard
-│   │   ├── property/
-│   │   │   └── [id]/
-│   │   │       └── page.tsx         # Property Page with Reviews
-│   │   ├── api/
-│   │   │   └── trpc/
-│   │   │       └── [trpc]/
-│   │   │           └── route.ts     # tRPC API Handler
-│   │   ├── globals.css              # Global styles
-│   │   └── layout.tsx               # Root layout
-│   ├── components/
-│   │   ├── ui/                      # Shadcn/UI components
-│   │   ├── dashboard/
-│   │   │   ├── ReviewsDashboard.tsx
-│   │   │   ├── ReviewsTable.tsx
-│   │   │   ├── FilterControls.tsx
-│   │   │   └── PerformanceMetrics.tsx
-│   │   ├── property/
-│   │   │   ├── PropertyLayout.tsx
-│   │   │   └── ReviewsSection.tsx
-│   │   └── common/
-│   │       ├── Header.tsx
-│   │       └── LoadingSpinner.tsx
-│   ├── server/
-│   │   ├── api/
-│   │   │   ├── root.ts              # Main tRPC router
-│   │   │   └── routers/
-│   │   │       ├── reviews.ts       # Reviews procedures
-│   │   │       └── properties.ts    # Properties procedures
-│   │   ├── db.ts                    # Database configuration
-│   │   └── trpc.ts                  # tRPC setup
-│   ├── lib/
-│   │   ├── utils.ts                 # Utility functions
-│   │   ├── hostaway.ts              # Hostaway API integration
-│   │   └── google-places.ts         # Google Places API utilities
-│   ├── types/
-│   │   ├── reviews.ts               # Review type definitions
-│   │   └── hostaway.ts              # Hostaway API types
-│   └── hooks/
-│       ├── useReviews.ts            # Custom review hooks
-│       └── useFilters.ts            # Filter state management
-├── prisma/
-│   ├── schema.prisma                # Database schema
-│   └── seed.ts                      # Database seeding
-├── public/                          # Static assets
-├── .env.example                     # Environment variables template
-├── .env.local                       # Local environment (not committed)
-├── tailwind.config.js              # Tailwind configuration
-├── components.json                  # Shadcn/UI configuration
-└── package.json
+└── flex-living
+    └── drizzle
+        └── meta
+            ├── _journal.json
+            ├── 0000_snapshot.json
+            ├── 0001_snapshot.json
+            ├── 0002_snapshot.json
+        ├── 0000_red_preak.sql
+        ├── 0001_clean_odin.sql
+        ├── 0002_ordinary_retro_girl.sql
+    └── public
+        ├── favicon.ico
+        ├── logo-slogan.png
+        ├── logo.png
+        ├── logo.svg
+    └── src
+        └── app
+            └── _components
+                └── dashboard
+                    ├── filter-controls.tsx
+                    ├── performance-metrics.tsx
+                    ├── property-overview.tsx
+                    ├── reviews-dashboard.tsx
+                    ├── reviews-table.tsx
+                    ├── trend-analysis.tsx
+                └── landing
+                    ├── landing-features.tsx
+                    ├── landing-hero.tsx
+                    ├── landing-properties.tsx
+                    ├── nav.tsx
+                └── property
+                    ├── property-amenities.tsx
+                    ├── property-booking.tsx
+                    ├── property-card.tsx
+                    ├── property-gallery.tsx
+                    ├── property-info.tsx
+                    ├── property-location.tsx
+                    ├── property-policies.tsx
+                    ├── property-reviews.tsx
+            └── api
+                └── auth
+                    └── [...nextauth]
+                        ├── route.ts
+                └── reviews
+                    └── google
+                        ├── route.ts
+                    └── hostaway
+                        ├── route.ts
+                └── trpc
+                    └── [trpc]
+                        ├── route.ts
+            └── dashboard
+                ├── page.tsx
+            └── privacy
+                ├── page.tsx
+            └── property
+                └── [id]
+                    ├── page.tsx
+                ├── page.tsx
+            └── terms
+                ├── page.tsx
+            ├── layout.tsx
+            ├── page.tsx
+        └── components
+            └── ui
+                ├── badge.tsx
+                ├── button.tsx
+                ├── card.tsx
+                ├── checkbox.tsx
+                ├── dialog.tsx
+                ├── input.tsx
+                ├── label.tsx
+                ├── resizable-navbar.tsx
+                ├── select.tsx
+                ├── table.tsx
+        └── lib
+            ├── csv-export.ts
+            ├── google-places.ts
+            ├── hostaway.ts
+            ├── utils.ts
+        └── server
+            └── api
+                └── routers
+                    ├── properties.ts
+                    ├── reviews.ts
+                ├── root.ts
+                ├── trpc.ts
+            └── auth
+                ├── config.ts
+                ├── index.ts
+            └── db
+                ├── index.ts
+                ├── schema.ts
+        └── styles
+            ├── globals.css
+        └── trpc
+            ├── query-client.ts
+            ├── react.tsx
+            ├── server.ts
+        ├── env.js
+    ├── .env
+    ├── .gitignore
+    ├── bun.lock
+    ├── components.json
+    ├── drizzle.config.ts
+    ├── eslint.config.js
+    ├── next-env.d.ts
+    ├── next.config.js
+    ├── package.json
+    ├── postcss.config.js
+    ├── prettier.config.js
+    ├── README.md
+    ├── start-database.sh
+    └── tsconfig.json
 ```
 
 ## 🚀 Quick Start
