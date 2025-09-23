@@ -23,6 +23,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${geist.variable}`}>
+      <head>
+        <script
+          defer
+          src="https://analytics.mohammedhaydar.com/script.js"
+          data-website-id="b885bbbe-1e62-4870-8dc1-c61789add95d"
+        ></script>
+      </head>
       <body>
         <TRPCReactProvider>
           <Navbar session={session} />
