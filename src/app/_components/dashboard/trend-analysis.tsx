@@ -1,7 +1,11 @@
+"use client";
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, TrendingDown, Star } from "lucide-react";
 import { api } from "@/trpc/react";
+import { IssuesChart } from "./issues-chart";
+import { useState } from "react";
 
 interface TrendAnalysisProps {
   propertyId?: string;
@@ -81,86 +85,97 @@ export function TrendAnalysis({ propertyId, dateRange }: TrendAnalysisProps) {
   };
 
   return (
-    <Card className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-orange-600" />
-          <h3 className="text-lg font-semibold text-gray-900">
-            Top Issues to Address
-          </h3>
-        </div>
-        {trendData.totalReviewsAnalyzed > 0 && (
-          <Badge variant="outline" className="text-xs">
-            Based on {trendData.totalReviewsAnalyzed} reviews
-          </Badge>
-        )}
-      </div>
+    <>
+      {/* Chart View */}
+      <IssuesChart
+        data={trendData?.topIssues ?? []}
+        totalReviewsAnalyzed={trendData?.totalReviewsAnalyzed ?? 0}
+        isLoading={isLoading}
+      />
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-        {trendData.topIssues.map((issue, index) => (
-          <div
-            key={issue.category}
-            className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
-          >
-            <div className="mb-3 flex items-center justify-between">
-              {/* Issue Rank */}
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-700">
-                {index + 1}
-              </div>
-
-              {/* Issue Severity Badge */}
-              <Badge
-                variant="outline"
-                className={`${getIssueColor(issue.averageRating)} border`}
-              >
-                {issue.issuePercentage}% issues
+      {/* Grid View */}
+      <Card className="p-6">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-orange-600" />
+            <h3 className="text-lg font-semibold text-gray-900">
+              Top Issues to Address
+            </h3>
+          </div>
+          {trendData?.totalReviewsAnalyzed &&
+            trendData.totalReviewsAnalyzed > 0 && (
+              <Badge variant="outline" className="text-xs">
+                Based on {trendData.totalReviewsAnalyzed} reviews
               </Badge>
-            </div>
-
-            {/* Issue Details */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="text-sm">
-                  {getIssueIcon(issue.averageRating)}
-                </span>
-                <h4 className="font-medium text-gray-900">
-                  {issue.displayName}
-                </h4>
-              </div>
-              <div className="space-y-1 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <TrendingDown className="h-3 w-3" />
-                  <span>
-                    {issue.negativeReviews} negative review
-                    {issue.negativeReviews !== 1 ? "s" : ""}
-                  </span>
-                </div>
-                <div>Avg: {issue.averageRating.toFixed(1)}/5.0</div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {trendData.topIssues.length > 0 && (
-        <div className="mt-6 rounded-lg bg-blue-50 p-4">
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-blue-100">
-              <span className="text-xs">💡</span>
-            </div>
-            <div className="space-y-1">
-              <h5 className="text-sm font-medium text-blue-900">
-                Improvement Suggestions
-              </h5>
-              <p className="text-xs text-blue-700">
-                Focus on the top-ranked issues first. Consider reaching out to
-                guests with low ratings in these categories to understand
-                specific concerns and implement targeted improvements.
-              </p>
-            </div>
-          </div>
+            )}
         </div>
-      )}
-    </Card>
+
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+          {trendData?.topIssues?.map((issue, index) => (
+            <div
+              key={issue.category}
+              className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
+            >
+              <div className="mb-3 flex items-center justify-between">
+                {/* Issue Rank */}
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-700">
+                  {index + 1}
+                </div>
+
+                {/* Issue Severity Badge */}
+                <Badge
+                  variant="outline"
+                  className={`${getIssueColor(issue.averageRating)} border`}
+                >
+                  {issue.issuePercentage}% issues
+                </Badge>
+              </div>
+
+              {/* Issue Details */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">
+                    {getIssueIcon(issue.averageRating)}
+                  </span>
+                  <h4 className="font-medium text-gray-900">
+                    {issue.displayName}
+                  </h4>
+                </div>
+                <div className="space-y-1 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <TrendingDown className="h-3 w-3" />
+                    <span>
+                      {issue.negativeReviews} negative review
+                      {issue.negativeReviews !== 1 ? "s" : ""}
+                    </span>
+                  </div>
+                  <div>Avg: {issue.averageRating.toFixed(1)}/5.0</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {trendData.topIssues.length > 0 && (
+          <div className="mt-6 rounded-lg bg-blue-50 p-4">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-blue-100">
+                <span className="text-xs">💡</span>
+              </div>
+              <div className="space-y-1">
+                <h5 className="text-sm font-medium text-blue-900">
+                  Improvement Suggestions
+                </h5>
+                <p className="text-xs text-blue-700">
+                  Focus on the top-ranked issues first. Consider reaching out to
+                  guests with low ratings in these categories to understand
+                  specific concerns and implement targeted improvements.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </Card>
+    </>
   );
 }
