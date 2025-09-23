@@ -48,7 +48,8 @@ export interface ReviewCategory {
     | "communication"
     | "respect_house_rules"
     | "location"
-    | "value";
+    | "value"
+    | "noise_level";
   rating: number; // 1-10 scale from Hostaway
   normalizedRating: number; // 1-5 scale for display
 }
@@ -95,6 +96,7 @@ export function getMockReviewData(): HostawayApiResponse {
           { category: "respect_house_rules", rating: 9 },
           { category: "location", rating: 10 },
           { category: "value", rating: 8 },
+          { category: "noise_level", rating: 9 },
         ],
         submittedAt: "2024-08-21T22:45:14Z",
         guestName: "Shane Finkelstein",
@@ -129,6 +131,7 @@ export function getMockReviewData(): HostawayApiResponse {
           { category: "respect_house_rules", rating: 8 },
           { category: "location", rating: 10 },
           { category: "value", rating: 7 },
+          { category: "noise_level", rating: 8 },
         ],
         submittedAt: "2024-07-15T14:30:22Z",
         guestName: "Maria Rodriguez",
@@ -165,6 +168,7 @@ export function getMockReviewData(): HostawayApiResponse {
           { category: "respect_house_rules", rating: 9 },
           { category: "location", rating: 8 },
           { category: "value", rating: 5 },
+          { category: "noise_level", rating: 4 },
         ],
         submittedAt: "2024-06-28T11:15:45Z",
         guestName: "Lisa Chen",
@@ -183,6 +187,7 @@ export function getMockReviewData(): HostawayApiResponse {
           { category: "respect_house_rules", rating: 8 },
           { category: "location", rating: 7 },
           { category: "value", rating: 2 },
+          { category: "noise_level", rating: 6 },
         ],
         submittedAt: "2024-05-12T09:30:15Z",
         guestName: "Robert Johnson",
@@ -201,6 +206,7 @@ export function getMockReviewData(): HostawayApiResponse {
           { category: "respect_house_rules", rating: 7 },
           { category: "location", rating: 6 },
           { category: "value", rating: 6 },
+          { category: "noise_level", rating: 4 },
         ],
         submittedAt: "2024-04-18T16:45:22Z",
         guestName: "Emma Wilson",
@@ -219,6 +225,7 @@ export function getMockReviewData(): HostawayApiResponse {
           { category: "respect_house_rules", rating: 6 },
           { category: "location", rating: 5 },
           { category: "value", rating: 2 },
+          { category: "noise_level", rating: 3 },
         ],
         submittedAt: "2024-03-25T12:20:33Z",
         guestName: "David Brown",

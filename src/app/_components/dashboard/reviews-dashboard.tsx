@@ -175,6 +175,8 @@ export function ReviewsDashboard() {
         onPropertySelect={(propertyId) =>
           handleFilterChange({ ...filters, propertyId })
         }
+        propertyId={filters.propertyId}
+        dateRange={filters.dateRange}
       />
 
       {/* Filter Controls */}

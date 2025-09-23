@@ -30,9 +30,10 @@ function formatCategoryName(category: string): string {
   const categoryMap: Record<string, string> = {
     cleanliness: "Cleanliness",
     communication: "Communication",
-    respect_house_rules: "House Rules",
+    respect_house_rules: "Respect House Rules",
     location: "Location",
     value: "Value",
+    noise_level: "Noise Level",
   };
 
   return (
@@ -551,6 +552,107 @@ export const reviewsRouter = createTRPCRouter({
         topIssues,
         totalCategoriesAnalyzed: Object.keys(categoryAnalysis).length,
         totalReviewsAnalyzed: categoriesData.length,
+      };
+    }),
+
+  // Get category averages across all reviews
+  getCategoryAverages: publicProcedure
+    .input(
+      z.object({
+        propertyId: z.string().optional(),
+        dateRange: z
+          .object({
+            from: z.date().optional(),
+            to: z.date().optional(),
+          })
+          .optional(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { propertyId, dateRange } = input;
+
+      // Build conditions for filtering reviews
+      const reviewConditions = [];
+
+      if (propertyId) {
+        reviewConditions.push(eq(reviews.propertyId, propertyId));
+      }
+
+      if (dateRange?.from) {
+        reviewConditions.push(gte(reviews.submittedAt, dateRange.from));
+      }
+
+      if (dateRange?.to) {
+        reviewConditions.push(lte(reviews.submittedAt, dateRange.to));
+      }
+
+      // Only analyze guest-to-host reviews that are approved
+      reviewConditions.push(eq(reviews.reviewType, "guest-to-host"));
+      reviewConditions.push(eq(reviews.isApproved, true));
+
+      // Get all review categories with their ratings
+      const categoriesData = await ctx.db
+        .select({
+          category: reviewCategories.category,
+          rating: reviewCategories.rating,
+          normalizedRating: reviewCategories.normalizedRating,
+        })
+        .from(reviewCategories)
+        .innerJoin(reviews, eq(reviewCategories.reviewId, reviews.id))
+        .where(
+          reviewConditions.length > 0 ? and(...reviewConditions) : undefined,
+        );
+
+      // Group by category and calculate averages
+      const categoryAverages = categoriesData.reduce(
+        (acc, item) => {
+          const category = item.category;
+          const rating = item.rating; // 1-10 scale
+
+          if (!acc[category]) {
+            acc[category] = {
+              category,
+              totalRating: 0,
+              count: 0,
+              ratings: [],
+            };
+          }
+
+          acc[category].totalRating += rating;
+          acc[category].count++;
+          acc[category].ratings.push(rating);
+
+          return acc;
+        },
+        {} as Record<
+          string,
+          {
+            category: string;
+            totalRating: number;
+            count: number;
+            ratings: number[];
+          }
+        >,
+      );
+
+      // Calculate final averages and format for display
+      const averages = Object.values(categoryAverages)
+        .map((data) => {
+          const averageRating = data.totalRating / data.count;
+          return {
+            category: data.category,
+            displayName: formatCategoryName(data.category),
+            averageRating: Math.round(averageRating * 10) / 10, // Keep on 1-10 scale
+            normalizedAverage: Math.round((averageRating / 2) * 10) / 10, // Convert to 1-5 scale
+            reviewCount: data.count,
+          };
+        })
+        .sort((a, b) => a.displayName.localeCompare(b.displayName)); // Sort alphabetically
+
+      return {
+        categoryAverages: averages,
+        totalReviewsAnalyzed: categoriesData.length,
+        categoriesFound: averages.length,
       };
     }),
 });

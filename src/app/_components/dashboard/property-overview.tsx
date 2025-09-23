@@ -8,6 +8,7 @@ import {
   CheckCircle,
   Clock,
 } from "lucide-react";
+import { api } from "@/trpc/react";
 
 type PropertyWithStats = {
   id: string;
@@ -26,13 +27,27 @@ interface PropertyOverviewProps {
   data?: PropertyWithStats[];
   isLoading: boolean;
   onPropertySelect: (propertyId: string) => void;
+  propertyId?: string;
+  dateRange?: {
+    from?: Date;
+    to?: Date;
+  };
 }
 
 export function PropertyOverview({
   data,
   isLoading,
   onPropertySelect,
+  propertyId,
+  dateRange,
 }: PropertyOverviewProps) {
+  // Fetch category averages
+  const { data: categoryData, isLoading: categoryLoading } =
+    api.reviews.getCategoryAverages.useQuery({
+      propertyId,
+      dateRange,
+    });
+
   if (isLoading) {
     return (
       <Card className="p-6">
@@ -205,6 +220,45 @@ export function PropertyOverview({
               <p className="text-sm text-gray-600">Avg Rating</p>
             </div>
           </div>
+        </div>
+
+        {/* Category Averages */}
+        <div className="mt-6 border-t pt-4">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">
+            Category Averages
+          </h3>
+
+          {categoryLoading ? (
+            <div className="animate-pulse space-y-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <div className="h-4 w-24 rounded bg-gray-200"></div>
+                  <div className="h-4 w-8 rounded bg-gray-200"></div>
+                </div>
+              ))}
+            </div>
+          ) : categoryData?.categoryAverages &&
+            categoryData.categoryAverages.length > 0 ? (
+            <div className="space-y-3">
+              {categoryData.categoryAverages.map((category) => (
+                <div
+                  key={category.category}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-sm font-medium text-gray-700">
+                    {category.displayName}
+                  </span>
+                  <span className="text-sm font-bold text-gray-900">
+                    {category.averageRating.toFixed(1)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-4 text-center text-sm text-gray-500">
+              No category data available. Sync reviews to see category averages.
+            </div>
+          )}
         </div>
       </div>
     </Card>
