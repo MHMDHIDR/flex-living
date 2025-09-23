@@ -23,6 +23,11 @@ _Modern hero section with property background image and clear value proposition_
 ![Featured Properties](./screenshots/screenshot-3.png)
 _Showcase of available properties with key details and booking options_
 
+### Top Issues Analysis Chart
+
+![Top Issues Analysis Chart](./screenshots/screenshot-5.png)
+_Insights into the most common guest issues and feedback trends._
+
 ### Dashboard Analytics Overview
 
 ![Dashboard Analytics](./screenshots/screenshot-2.png)
@@ -308,7 +313,7 @@ const approveMutation = api.reviews.approve.useMutation();
 
 **Route**: `src/app/dashboard/page.tsx`
 
-**Features** (See Screenshot 2 & 1):
+**Features** (See Screenshot 2 & 1 & 5):
 
 - **Performance Overview**: Key metrics and trends with visual analytics
 - **Reviews Table**: Sortable, filterable review list with approval controls
