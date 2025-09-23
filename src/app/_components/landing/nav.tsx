@@ -32,12 +32,8 @@ export function Navbar({ session }: NavbarProps) {
       link: "/#how-it-works",
     },
     {
-      name: "Terms",
-      link: "/terms",
-    },
-    {
-      name: "Privacy",
-      link: "/privacy",
+      name: "Featured Properties",
+      link: "/#featured-properties",
     },
   ];
 

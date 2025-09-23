@@ -170,6 +170,60 @@ export function getMockReviewData(): HostawayApiResponse {
         guestName: "Lisa Chen",
         listingName: "1B E1 B - 28 Canary Wharf Studio",
       },
+      {
+        id: 7458,
+        type: "guest-to-host",
+        status: "published",
+        rating: 4,
+        publicReview:
+          "Unfortunately, this stay didn't meet expectations. The apartment was not clean upon arrival, with dirty dishes in the sink and hair in the bathroom. The host was difficult to reach when we needed help. Very poor value for money.",
+        reviewCategory: [
+          { category: "cleanliness", rating: 3 },
+          { category: "communication", rating: 4 },
+          { category: "respect_house_rules", rating: 8 },
+          { category: "location", rating: 7 },
+          { category: "value", rating: 2 },
+        ],
+        submittedAt: "2024-05-12T09:30:15Z",
+        guestName: "Robert Johnson",
+        listingName: "2B N1 A - 29 Shoreditch Heights",
+      },
+      {
+        id: 7459,
+        type: "guest-to-host",
+        status: "published",
+        rating: 5,
+        publicReview:
+          "Mixed experience. The location is great and the space is nice, but communication with the host was poor. They didn't respond to our messages for hours, and the noise from the street was quite loud at night.",
+        reviewCategory: [
+          { category: "cleanliness", rating: 8 },
+          { category: "communication", rating: 3 },
+          { category: "respect_house_rules", rating: 7 },
+          { category: "location", rating: 6 },
+          { category: "value", rating: 6 },
+        ],
+        submittedAt: "2024-04-18T16:45:22Z",
+        guestName: "Emma Wilson",
+        listingName: "1B S2 C - 42 Camden Loft",
+      },
+      {
+        id: 7460,
+        type: "guest-to-host",
+        status: "published",
+        rating: 3,
+        publicReview:
+          "Very disappointing stay. The apartment was overpriced for what you get. The cleanliness was subpar, the host was unresponsive, and there were noise issues from neighbors. Would not recommend.",
+        reviewCategory: [
+          { category: "cleanliness", rating: 4 },
+          { category: "communication", rating: 2 },
+          { category: "respect_house_rules", rating: 6 },
+          { category: "location", rating: 5 },
+          { category: "value", rating: 2 },
+        ],
+        submittedAt: "2024-03-25T12:20:33Z",
+        guestName: "David Brown",
+        listingName: "3B W1 A - 15 Notting Hill Residence",
+      },
     ],
   };
 }

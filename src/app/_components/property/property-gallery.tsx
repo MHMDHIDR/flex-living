@@ -62,6 +62,8 @@ export function PropertyGallery({ property: _ }: PropertyGalleryProps) {
               src={mainImage.url}
               alt={mainImage.alt}
               className="h-full w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
+              width={1000}
+              height={1000}
             />
           </div>
         </div>
@@ -74,6 +76,8 @@ export function PropertyGallery({ property: _ }: PropertyGalleryProps) {
                 src={image.url}
                 alt={image.alt}
                 className="h-full w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
+                width={1000}
+                height={1000}
               />
               {/* Show "View all photos" overlay on last thumbnail */}
               {index === thumbnailImages.length - 1 && (

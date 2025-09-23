@@ -105,13 +105,13 @@ export function LandingFeatures() {
                 >
                   <div className="space-y-4">
                     <div
-                      className={`rounded-full p-3 ${feature.bgColor} w-fit`}
+                      className={`flex items-center gap-x-2 rounded-full p-3 ${feature.bgColor} w-fit`}
                     >
-                      <Icon className={`h-6 w-6 ${feature.color}`} />
+                      <Icon className={`size-6 ${feature.color}`} />
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {feature.title}
+                      </h3>
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {feature.title}
-                    </h3>
                     <p className="leading-relaxed text-gray-600">
                       {feature.description}
                     </p>

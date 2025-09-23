@@ -15,6 +15,7 @@ import {
 } from "@/app/_components/dashboard/filter-controls";
 import { ReviewsTable } from "@/app/_components/dashboard/reviews-table";
 import { PropertyOverview } from "@/app/_components/dashboard/property-overview";
+import { TrendAnalysis } from "@/app/_components/dashboard/trend-analysis";
 
 type PaginationState = {
   page: number;
@@ -161,6 +162,12 @@ export function ReviewsDashboard() {
       {/* Performance Metrics */}
       <PerformanceMetrics data={metricsData} isLoading={metricsLoading} />
 
+      {/* Trend Analysis - Top Issues to Address */}
+      <TrendAnalysis
+        propertyId={filters.propertyId}
+        dateRange={filters.dateRange}
+      />
+
       {/* Property Overview */}
       <PropertyOverview
         data={propertiesData}
@@ -197,7 +204,7 @@ export function ReviewsDashboard() {
                 className="bg-green-600 hover:bg-green-700"
               >
                 <CheckCircle className="mr-1 h-4 w-4" />
-                Approve All
+                Approve Selected
               </Button>
               <Button
                 size="sm"
@@ -206,7 +213,7 @@ export function ReviewsDashboard() {
                 disabled={bulkApprovalMutation.isPending}
               >
                 <Clock className="mr-1 h-4 w-4" />
-                Disapprove All
+                Disapprove Selected
               </Button>
               <Button
                 size="sm"

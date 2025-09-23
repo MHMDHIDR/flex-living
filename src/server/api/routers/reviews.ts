@@ -25,6 +25,22 @@ const ReviewFiltersSchema = z.object({
     .optional(),
 });
 
+// Utility function to format category names for display
+function formatCategoryName(category: string): string {
+  const categoryMap: Record<string, string> = {
+    cleanliness: "Cleanliness",
+    communication: "Communication",
+    respect_house_rules: "House Rules",
+    location: "Location",
+    value: "Value",
+  };
+
+  return (
+    categoryMap[category] ??
+    category.charAt(0).toUpperCase() + category.slice(1)
+  );
+}
+
 const PaginationSchema = z.object({
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(20),
@@ -411,6 +427,130 @@ export const reviewsRouter = createTRPCRouter({
           totalReviews > 0 ? (approvedReviews / totalReviews) * 100 : 0,
         averageRating: Math.round(averageRating * 100) / 100,
         channelDistribution,
+      };
+    }),
+
+  // Get trend analysis for identifying top issues
+  getTrendAnalysis: publicProcedure
+    .input(
+      z.object({
+        propertyId: z.string().optional(),
+        dateRange: z
+          .object({
+            from: z.date().optional(),
+            to: z.date().optional(),
+          })
+          .optional(),
+        limit: z.number().min(1).max(10).default(5),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { propertyId, dateRange, limit } = input;
+
+      // Build conditions for filtering reviews
+      const reviewConditions = [];
+
+      if (propertyId) {
+        reviewConditions.push(eq(reviews.propertyId, propertyId));
+      }
+
+      if (dateRange?.from) {
+        reviewConditions.push(gte(reviews.submittedAt, dateRange.from));
+      }
+
+      if (dateRange?.to) {
+        reviewConditions.push(lte(reviews.submittedAt, dateRange.to));
+      }
+
+      // Only analyze guest-to-host reviews as they contain feedback about issues
+      reviewConditions.push(eq(reviews.reviewType, "guest-to-host"));
+      reviewConditions.push(eq(reviews.isApproved, true)); // Only approved reviews
+
+      // Get all review categories with their ratings
+      const categoriesData = await ctx.db
+        .select({
+          category: reviewCategories.category,
+          rating: reviewCategories.rating,
+          normalizedRating: reviewCategories.normalizedRating,
+          reviewId: reviewCategories.reviewId,
+        })
+        .from(reviewCategories)
+        .innerJoin(reviews, eq(reviewCategories.reviewId, reviews.id))
+        .where(
+          reviewConditions.length > 0 ? and(...reviewConditions) : undefined,
+        );
+
+      // Group by category and calculate issue metrics
+      const categoryAnalysis = categoriesData.reduce(
+        (acc, item) => {
+          const category = item.category;
+          const rating = item.rating; // 1-10 scale
+          const normalizedRating = parseFloat(
+            item.normalizedRating?.toString() ?? "0",
+          );
+
+          if (!acc[category]) {
+            acc[category] = {
+              category,
+              totalReviews: 0,
+              totalRating: 0,
+              lowRatingCount: 0, // ratings <= 7 (3.5 normalized) are considered issues
+              ratings: [],
+            };
+          }
+
+          acc[category].totalReviews++;
+          acc[category].totalRating += rating;
+          acc[category].ratings.push(rating);
+
+          // Count low ratings as potential issues (≤7 on 1-10 scale = ≤3.5 on 1-5 scale)
+          if (rating <= 7) {
+            acc[category].lowRatingCount++;
+          }
+
+          return acc;
+        },
+        {} as Record<
+          string,
+          {
+            category: string;
+            totalReviews: number;
+            totalRating: number;
+            lowRatingCount: number;
+            ratings: number[];
+          }
+        >,
+      );
+
+      // Calculate final metrics and sort by issue priority
+      const topIssues = Object.values(categoryAnalysis)
+        .map((data) => {
+          const averageRating = data.totalRating / data.totalReviews;
+          const normalizedAverage = averageRating / 2; // Convert to 1-5 scale
+          const issuePercentage =
+            (data.lowRatingCount / data.totalReviews) * 100;
+
+          // Priority score: weight low ratings more heavily if they're frequent
+          const priorityScore = data.lowRatingCount * (1 / normalizedAverage);
+
+          return {
+            category: data.category,
+            displayName: formatCategoryName(data.category),
+            negativeReviews: data.lowRatingCount,
+            totalReviews: data.totalReviews,
+            averageRating: Math.round(normalizedAverage * 10) / 10,
+            issuePercentage: Math.round(issuePercentage),
+            priorityScore,
+          };
+        })
+        .filter((issue) => issue.negativeReviews > 0) // Only show categories with issues
+        .sort((a, b) => b.priorityScore - a.priorityScore) // Sort by priority
+        .slice(0, limit);
+
+      return {
+        topIssues,
+        totalCategoriesAnalyzed: Object.keys(categoryAnalysis).length,
+        totalReviewsAnalyzed: categoriesData.length,
       };
     }),
 });

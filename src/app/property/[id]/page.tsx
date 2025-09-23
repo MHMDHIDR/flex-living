@@ -1,5 +1,4 @@
 import { api } from "@/trpc/server";
-import { PropertyHeader } from "@/app/_components/property/property-header";
 import { PropertyGallery } from "@/app/_components/property/property-gallery";
 import { PropertyInfo } from "@/app/_components/property/property-info";
 import { PropertyBooking } from "@/app/_components/property/property-booking";
@@ -10,9 +9,7 @@ import { PropertyReviews } from "@/app/_components/property/property-reviews";
 import { notFound } from "next/navigation";
 
 interface PropertyPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
@@ -39,11 +36,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header Navigation */}
-      <PropertyHeader />
-
       {/* Property Content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 pt-20">
         <div className="mx-auto max-w-7xl">
           {/* Photo Gallery */}
           <PropertyGallery property={property.property} />

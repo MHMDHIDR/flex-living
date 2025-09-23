@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import React from "react";
 
 type PaginationState = {
   page: number;
@@ -248,10 +249,10 @@ export function ReviewsTable({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="5">5</SelectItem>
                 <SelectItem value="10">10</SelectItem>
                 <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
+                <SelectItem value="25">25</SelectItem>
               </SelectContent>
             </Select>
             <span className="text-sm text-gray-600">per page</span>
@@ -282,7 +283,9 @@ export function ReviewsTable({
                   <SortButton column="submittedAt">Date</SortButton>
                 </TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="sticky right-0 bg-white shadow-[-4px_0_4px_-2px_rgba(0,0,0,0.1)] dark:bg-gray-900">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -292,11 +295,8 @@ export function ReviewsTable({
                 const isExpanded = expandedReview === review.id;
 
                 return (
-                  <>
-                    <TableRow
-                      key={review.id}
-                      className={isSelected ? "bg-blue-50" : ""}
-                    >
+                  <React.Fragment key={review.id}>
+                    <TableRow className={isSelected ? "bg-blue-50" : ""}>
                       <TableCell>
                         <Checkbox
                           checked={isSelected}
@@ -398,7 +398,7 @@ export function ReviewsTable({
                         </div>
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className="sticky right-0 bg-white shadow-[-4px_0_4px_-2px_rgba(0,0,0,0.1)] dark:bg-gray-900">
                         <div className="flex gap-1">
                           {!review.isApproved ? (
                             <Button
@@ -432,7 +432,7 @@ export function ReviewsTable({
                         key={`${review.id}-expanded`}
                         className={isSelected ? "bg-blue-50" : ""}
                       >
-                        <TableCell colSpan={10} className="px-4 py-3">
+                        <TableCell colSpan={9} className="px-4 py-3">
                           <div className="rounded-lg bg-gray-50 p-4">
                             <div className="mb-2 flex items-center gap-2">
                               <Badge variant="outline" className="text-xs">
@@ -449,7 +449,7 @@ export function ReviewsTable({
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </TableBody>
