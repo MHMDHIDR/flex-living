@@ -90,7 +90,7 @@ export async function fetchGoogleReviews(
       );
     }
 
-    const data: GooglePlacesApiResponse = await response.json();
+    const data = (await response.json()) as GooglePlacesApiResponse;
 
     if (data.status !== "OK") {
       throw new Error(`Google Places API error: ${data.status}`);

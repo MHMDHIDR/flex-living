@@ -152,10 +152,33 @@ export function useCSVExport<
   return { exportCSV, isExporting };
 }
 
+// TypeScript types for review export
+type ReviewTableData = {
+  review: {
+    id: string;
+    externalId: string;
+    propertyId: string;
+    guestName: string;
+    rating: number | null;
+    overallRating: string | null;
+    comment: string;
+    channel: string;
+    reviewType: string;
+    status: string;
+    isApproved: boolean;
+    submittedAt: Date;
+  };
+  property: {
+    id: string;
+    name: string;
+    city: string | null;
+  } | null;
+};
+
 // Specific function for exporting review data
 export function exportReviewsToCSV(
-  reviews: any[],
-  filename: string = "reviews-export",
+  reviews: ReviewTableData[],
+  filename = "reviews-export",
 ): void {
   const exportData = reviews.map((item) => ({
     guest_name: item.review.guestName,

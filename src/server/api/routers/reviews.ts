@@ -165,8 +165,8 @@ export const reviewsRouter = createTRPCRouter({
       const placeIdsMap = getPropertyPlaceIds();
       const placeIds = Object.values(placeIdsMap);
 
-      let allNormalizedReviews: NormalizedGoogleReview[] = [];
-      let allNormalizedProperties: NormalizedGoogleProperty[] = [];
+      const allNormalizedReviews: NormalizedGoogleReview[] = [];
+      const allNormalizedProperties: NormalizedGoogleProperty[] = [];
 
       // Process each place ID
       for (const placeId of placeIds) {
