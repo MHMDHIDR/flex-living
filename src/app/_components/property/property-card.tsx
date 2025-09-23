@@ -174,7 +174,7 @@ export function PropertyCard({
         {/* Property Description - Flexible content area */}
         <div className="mb-4 flex-1">
           <p className="line-clamp-2 text-sm text-gray-600">
-            {property.description ||
+            {property.description ??
               `Beautiful property located in ${property.city}. Perfect for travelers seeking comfort and convenience in a prime location.`}
           </p>
         </div>

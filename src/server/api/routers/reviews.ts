@@ -486,19 +486,13 @@ export const reviewsRouter = createTRPCRouter({
         (acc, item) => {
           const category = item.category;
           const rating = item.rating; // 1-10 scale
-          const normalizedRating = parseFloat(
-            item.normalizedRating?.toString() ?? "0",
-          );
-
-          if (!acc[category]) {
-            acc[category] = {
-              category,
-              totalReviews: 0,
-              totalRating: 0,
-              lowRatingCount: 0, // ratings <= 7 (3.5 normalized) are considered issues
-              ratings: [],
-            };
-          }
+          acc[category] ??= {
+            category,
+            totalReviews: 0,
+            totalRating: 0,
+            lowRatingCount: 0, // ratings <= 7 (3.5 normalized) are considered issues
+            ratings: [],
+          };
 
           acc[category].totalReviews++;
           acc[category].totalRating += rating;
@@ -609,14 +603,12 @@ export const reviewsRouter = createTRPCRouter({
           const category = item.category;
           const rating = item.rating; // 1-10 scale
 
-          if (!acc[category]) {
-            acc[category] = {
-              category,
-              totalRating: 0,
-              count: 0,
-              ratings: [],
-            };
-          }
+          acc[category] ??= {
+            category,
+            totalRating: 0,
+            count: 0,
+            ratings: [],
+          };
 
           acc[category].totalRating += rating;
           acc[category].count++;

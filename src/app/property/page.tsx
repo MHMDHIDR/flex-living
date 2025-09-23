@@ -18,9 +18,9 @@ export default async function PropertiesPage() {
               Discover Premium Properties
             </h1>
             <p className="text-xl text-gray-600">
-              Carefully curated accommodations in London's most desirable
+              {`Carefully curated accommodations in London's most desirable
               locations. Each property is professionally managed with verified
-              guest reviews.
+              guest reviews.`}
             </p>
           </div>
         </div>
@@ -38,7 +38,7 @@ export default async function PropertiesPage() {
                 No Properties Available
               </h3>
               <p className="text-gray-600">
-                Properties will appear here once they're synced from Hostaway.
+                {`Properties will appear here once they're synced from Hostaway.`}
               </p>
             </div>
           ) : (
