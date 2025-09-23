@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, TrendingDown, Star } from "lucide-react";
 import { api } from "@/trpc/react";
 import { IssuesChart } from "./issues-chart";
-import { useState } from "react";
 
 interface TrendAnalysisProps {
   propertyId?: string;

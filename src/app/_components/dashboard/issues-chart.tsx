@@ -107,10 +107,22 @@ export function IssuesChart({
     };
   });
 
-  // Custom tooltip component
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
+  // Custom tooltip component with proper typing
+  interface TooltipProps {
+    active?: boolean;
+    payload?: Array<{
+      payload: ChartDataItem;
+      value: number;
+      dataKey: string;
+    }>;
+    label?: string;
+  }
+
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+    if (active && payload?.length) {
+      const data = payload[0]?.payload;
+      if (!data) return null;
+
       return (
         <div className="rounded-xl border-0 bg-gray-800/95 p-4 text-white shadow-2xl backdrop-blur-sm">
           <p className="mb-2 font-semibold text-white">{label}</p>
