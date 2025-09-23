@@ -11,7 +11,29 @@ This application provides a comprehensive solution for managing property reviews
 - **Multi-channel Integration**: Hostaway API integration with Google Reviews exploration
 - **Real-time Data Management**: Normalized review data from various sources
 
-## 🛠️ Tech Stack
+## � Application Screenshots
+
+### Landing Page Hero Section
+
+![Landing Page Hero](./screenshots/screenshot-4.png)
+_Modern hero section with property background image and clear value proposition_
+
+### Featured Properties Section
+
+![Featured Properties](./screenshots/screenshot-3.png)
+_Showcase of available properties with key details and booking options_
+
+### Dashboard Analytics Overview
+
+![Dashboard Analytics](./screenshots/screenshot-2.png)
+_Comprehensive analytics dashboard showing review metrics, performance trends, and key statistics_
+
+### Reviews Management Interface
+
+![Reviews Management](./screenshots/screenshot-1.png)
+_Manager interface for reviewing, filtering, and approving guest reviews from multiple channels_
+
+## �🛠️ Tech Stack
 
 ### Core Framework
 
@@ -271,14 +293,25 @@ const approveMutation = api.reviews.approve.useMutation();
 
 ## 🖥️ Pages & Features
 
-### 1. Manager Dashboard (`/dashboard`)
+### 1. Landing Page (`/`)
+
+**Route**: `src/app/page.tsx`
+
+**Features** (See Screenshot 4 & 3):
+
+- **Hero Section**: Modern design with property background image and clear value proposition
+- **Featured Properties**: Showcase of available properties with key details and booking options
+- **Performance Metrics**: Key statistics and trust indicators
+- **Responsive Design**: Optimized for all device sizes
+
+### 2. Manager Dashboard (`/dashboard`)
 
 **Route**: `src/app/dashboard/page.tsx`
 
-**Features**:
+**Features** (See Screenshot 2 & 1):
 
-- **Performance Overview**: Key metrics and trends
-- **Reviews Table**: Sortable, filterable review list
+- **Performance Overview**: Key metrics and trends with visual analytics
+- **Reviews Table**: Sortable, filterable review list with approval controls
 - **Bulk Actions**: Approve/disapprove multiple reviews
 - **Real-time Sync**: Manual and automated Hostaway sync
 - **Export Functionality**: Download review data
@@ -292,7 +325,7 @@ const approveMutation = api.reviews.approve.useMutation();
 - Property/Listing
 - Approval Status
 
-### 2. Property Page (`/property/[id]`)
+### 3. Property Page (`/property/[id]`)
 
 **Route**: `src/app/property/[id]/page.tsx`
 
@@ -304,7 +337,7 @@ const approveMutation = api.reviews.approve.useMutation();
 - **Pagination**: Handles large review volumes
 - **Responsive Design**: Mobile-optimized display
 
-### 3. API Routes
+### 4. API Routes
 
 **Route**: `src/app/api/trpc/[trpc]/route.ts`
 
