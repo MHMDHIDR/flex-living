@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 import React, { useRef, useState } from "react";
+import clsx from "clsx";
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -133,6 +134,19 @@ export const NavItems = ({
   session,
 }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const [visible, setVisible] = useState<boolean>(false);
+  const { scrollYProgress } = useScroll();
+
+  useMotionValueEvent(scrollYProgress, "change", (current) => {
+    // Check if current is not undefined and is a number
+    if (typeof current === "number") {
+      if (scrollYProgress.get() < 0.05) {
+        setVisible(false); // At top - full width
+      } else {
+        setVisible(true); // Scrolled down - floating effect
+      }
+    }
+  });
 
   const maxTwoWordsTwelveCharacters = (name: string | undefined | null) => {
     if (!name) return ".";
@@ -151,7 +165,12 @@ export const NavItems = ({
         <Link
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
+          className={clsx(
+            "relative px-4 py-2 text-neutral-600 dark:text-neutral-300",
+            {
+              "text-white": !visible,
+            },
+          )}
           key={`link-${idx}`}
           href={item.link}
         >
