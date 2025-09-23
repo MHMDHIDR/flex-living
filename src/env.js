@@ -15,6 +15,7 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
     HOSTAWAY_API_KEY: z.string(),
+    GOOGLE_REVIEWS_API_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -34,6 +35,7 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     HOSTAWAY_API_KEY: process.env.HOSTAWAY_API_KEY,
+    GOOGLE_REVIEWS_API_KEY: process.env.GOOGLE_REVIEWS_API_KEY,
     NEXT_PUBLIC_HOSTAWAY_ACCOUNT_ID:
       process.env.NEXT_PUBLIC_HOSTAWAY_ACCOUNT_ID,
     NODE_ENV: process.env.NODE_ENV,

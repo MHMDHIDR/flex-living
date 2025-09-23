@@ -117,7 +117,7 @@ export function ReviewsDashboard() {
             className="bg-blue-600 hover:bg-blue-700"
           >
             <RefreshCw
-              className={`mr-2 h-4 w-4 ${syncMutation.isPending ? "animate-spin" : ""}`}
+              className={`mr-2 size-4 ${syncMutation.isPending ? "animate-spin" : ""}`}
             />
             Sync Reviews
           </Button>
@@ -126,17 +126,17 @@ export function ReviewsDashboard() {
         {/* Quick Stats */}
         <div className="flex gap-4 text-sm text-gray-600">
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 text-yellow-500" />
+            <Star className="size-4 text-yellow-500" />
             <span>
               {metricsData?.averageRating?.toFixed(1) ?? "0.0"} avg rating
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <CheckCircle className="h-4 w-4 text-green-500" />
+            <CheckCircle className="size-4 text-green-500" />
             <span>{metricsData?.approvedReviews ?? 0} approved</span>
           </div>
           <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4 text-orange-500" />
+            <Clock className="size-4 text-orange-500" />
             <span>
               {(metricsData?.totalReviews ?? 0) -
                 (metricsData?.approvedReviews ?? 0)}{" "}
@@ -192,7 +192,7 @@ export function ReviewsDashboard() {
                 disabled={bulkApprovalMutation.isPending}
                 className="bg-green-600 hover:bg-green-700"
               >
-                <CheckCircle className="mr-1 h-4 w-4" />
+                <CheckCircle className="mr-1 size-4" />
                 Approve Selected
               </Button>
               <Button
@@ -201,7 +201,7 @@ export function ReviewsDashboard() {
                 onClick={() => handleBulkApproval(false)}
                 disabled={bulkApprovalMutation.isPending}
               >
-                <Clock className="mr-1 h-4 w-4" />
+                <Clock className="mr-1 size-4" />
                 Disapprove Selected
               </Button>
               <Button

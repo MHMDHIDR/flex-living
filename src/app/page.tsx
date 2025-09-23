@@ -13,9 +13,9 @@ export default async function Home() {
       <div className="min-h-screen bg-white">
         <LandingHero session={session} />
 
-        <LandingFeatures />
-
         <LandingProperties />
+
+        <LandingFeatures />
 
         <footer className="bg-gray-900 py-12 text-white">
           <div className="container mx-auto px-4">

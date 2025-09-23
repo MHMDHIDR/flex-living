@@ -31,6 +31,7 @@ import {
   Calendar,
   Download,
   Loader2,
+  StarOff,
 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -183,7 +184,13 @@ export function ReviewsTable({
   };
 
   const renderStars = (rating: number | null) => {
-    if (!rating) return <span className="text-gray-400">N/A</span>;
+    if (!rating)
+      return (
+        <span className="flex items-center gap-2 text-gray-400">
+          <StarOff className="size-4" />
+          No Rating
+        </span>
+      );
 
     return (
       <div className="flex items-center gap-1">
