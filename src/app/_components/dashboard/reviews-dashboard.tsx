@@ -66,6 +66,18 @@ export function ReviewsDashboard() {
     },
   });
 
+  const syncGoogleMutation = api.reviews.syncFromGoogle.useMutation({
+    onSuccess: async (data) => {
+      toast.success(
+        `Successfully synced ${data.reviewsCount} Google reviews from ${data.propertiesCount} properties`,
+      );
+      await refetchReviews();
+    },
+    onError: (error) => {
+      toast.error(`Failed to sync Google reviews: ${error.message}`);
+    },
+  });
+
   const bulkApprovalMutation = api.reviews.bulkUpdateApproval.useMutation({
     onSuccess: async (data) => {
       toast.success(
@@ -81,6 +93,10 @@ export function ReviewsDashboard() {
 
   const handleSync = () => {
     syncMutation.mutate();
+  };
+
+  const handleSyncGoogle = () => {
+    syncGoogleMutation.mutate();
   };
 
   const handleBulkApproval = (isApproved: boolean) => {
@@ -120,6 +136,16 @@ export function ReviewsDashboard() {
               className={`mr-2 size-4 ${syncMutation.isPending ? "animate-spin" : ""}`}
             />
             Sync Reviews
+          </Button>
+          <Button
+            onClick={handleSyncGoogle}
+            disabled={syncGoogleMutation.isPending}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <RefreshCw
+              className={`mr-2 size-4 ${syncGoogleMutation.isPending ? "animate-spin" : ""}`}
+            />
+            Sync Google Reviews
           </Button>
         </div>
 

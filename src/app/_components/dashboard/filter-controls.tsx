@@ -94,7 +94,7 @@ export function FilterControls({
             </Button>
             {activeFilterCount > 0 && (
               <Button variant="outline" size="sm" onClick={clearAllFilters}>
-                <X className="mr-1 h-4 w-4" />
+                <X className="mr-1 size-4" />
                 Clear All
               </Button>
             )}
@@ -106,13 +106,13 @@ export function FilterControls({
           <div className="flex flex-wrap gap-2">
             {filters.rating && filters.rating.length > 0 && (
               <Badge variant="outline" className="gap-1">
-                <Star className="h-3 w-3" />
+                <Star className="size-3" />
                 Rating: {filters.rating.join(", ")} stars
                 <button
                   onClick={() => handleFilterChange("rating", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </Badge>
             )}
@@ -124,7 +124,7 @@ export function FilterControls({
                   onClick={() => handleFilterChange("channel", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </Badge>
             )}
@@ -136,7 +136,7 @@ export function FilterControls({
                   onClick={() => handleFilterChange("reviewType", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </Badge>
             )}
@@ -148,7 +148,7 @@ export function FilterControls({
                   onClick={() => handleFilterChange("status", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </Badge>
             )}
@@ -160,7 +160,7 @@ export function FilterControls({
                   onClick={() => handleFilterChange("isApproved", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </Badge>
             )}
@@ -174,7 +174,7 @@ export function FilterControls({
                   onClick={() => handleFilterChange("propertyId", undefined)}
                   className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               </Badge>
             )}
@@ -187,8 +187,8 @@ export function FilterControls({
             {/* Rating Filter */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Rating</Label>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((rating) => (
+              <div className="flex max-w-48 flex-wrap gap-1">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
                   <Button
                     key={rating}
                     variant={
@@ -196,7 +196,7 @@ export function FilterControls({
                     }
                     size="sm"
                     onClick={() => handleRatingFilter(rating)}
-                    className="h-8 w-8 p-0"
+                    className="size-8 p-0"
                   >
                     {rating}
                   </Button>
@@ -327,7 +327,7 @@ export function FilterControls({
                 disabled
                 className="w-full justify-start"
               >
-                <Calendar className="mr-2 h-4 w-4" />
+                <Calendar className="mr-2 size-4" />
                 Coming Soon
               </Button>
             </div>

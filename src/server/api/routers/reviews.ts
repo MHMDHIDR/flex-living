@@ -8,6 +8,14 @@ import {
   normalizeReviewData,
   extractPropertiesFromReviews,
 } from "@/lib/hostaway";
+import {
+  fetchGoogleReviews,
+  normalizeGoogleReviewData,
+  extractPropertyFromGoogleData,
+  getPropertyPlaceIds,
+  type NormalizedGoogleReview,
+  type NormalizedGoogleProperty,
+} from "@/lib/google-places";
 
 // Input validation schemas
 const ReviewFiltersSchema = z.object({
@@ -34,6 +42,7 @@ function formatCategoryName(category: string): string {
     location: "Location",
     value: "Value",
     noise_level: "Noise Level",
+    overall: "Overall Rating",
   };
 
   return (
@@ -147,6 +156,114 @@ export const reviewsRouter = createTRPCRouter({
     } catch (error) {
       console.error("Error syncing reviews:", error);
       throw new Error("Failed to sync reviews from Hostaway");
+    }
+  }),
+
+  // Fetch and sync reviews from Google Places API
+  syncFromGoogle: publicProcedure.mutation(async ({ ctx }) => {
+    try {
+      const placeIdsMap = getPropertyPlaceIds();
+      const placeIds = Object.values(placeIdsMap);
+
+      let allNormalizedReviews: NormalizedGoogleReview[] = [];
+      let allNormalizedProperties: NormalizedGoogleProperty[] = [];
+
+      // Process each place ID
+      for (const placeId of placeIds) {
+        const googleData = await fetchGoogleReviews(placeId);
+        const normalizedReviews = normalizeGoogleReviewData(googleData);
+        const normalizedProperty = extractPropertyFromGoogleData(googleData);
+
+        allNormalizedReviews.push(...normalizedReviews);
+        allNormalizedProperties.push(normalizedProperty);
+      }
+
+      // First, insert or update properties
+      for (const property of allNormalizedProperties) {
+        await ctx.db
+          .insert(properties)
+          .values({
+            id: property.id,
+            externalId: property.externalId,
+            name: property.name,
+            address: property.address,
+            city: property.city ?? "London",
+            country: property.country ?? null,
+            description: property.description,
+          })
+          .onConflictDoUpdate({
+            target: properties.externalId,
+            set: {
+              name: property.name,
+              address: property.address,
+              city: property.city ?? "London",
+              country: property.country,
+              description: property.description,
+              updatedAt: new Date(),
+            },
+          });
+      }
+
+      // Then, insert or update reviews
+      for (const review of allNormalizedReviews) {
+        // Insert the review
+        await ctx.db
+          .insert(reviews)
+          .values({
+            id: review.id,
+            externalId: review.externalId,
+            propertyId: review.propertyId,
+            guestName: review.guestName,
+            rating: review.rating,
+            overallRating: review.overallRating?.toString(),
+            comment: review.comment,
+            channel: review.channel,
+            reviewType: review.reviewType,
+            status: review.status,
+            isApproved: review.isApproved,
+            submittedAt: review.submittedAt,
+          })
+          .onConflictDoUpdate({
+            target: reviews.externalId,
+            set: {
+              guestName: review.guestName,
+              rating: review.rating,
+              overallRating: review.overallRating?.toString(),
+              comment: review.comment,
+              status: review.status,
+              updatedAt: new Date(),
+            },
+          });
+
+        // Insert review categories
+        for (const category of review.categories) {
+          await ctx.db
+            .insert(reviewCategories)
+            .values({
+              id: category.id,
+              reviewId: review.id,
+              category: category.category,
+              rating: category.rating,
+              normalizedRating: category.normalizedRating.toString(),
+            })
+            .onConflictDoUpdate({
+              target: reviewCategories.id,
+              set: {
+                rating: category.rating,
+                normalizedRating: category.normalizedRating.toString(),
+              },
+            });
+        }
+      }
+
+      return {
+        success: true,
+        reviewsCount: allNormalizedReviews.length,
+        propertiesCount: allNormalizedProperties.length,
+      };
+    } catch (error) {
+      console.error("Error syncing Google reviews:", error);
+      throw new Error("Failed to sync reviews from Google Places");
     }
   }),
 

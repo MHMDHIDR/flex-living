@@ -49,7 +49,8 @@ export interface ReviewCategory {
     | "respect_house_rules"
     | "location"
     | "value"
-    | "noise_level";
+    | "noise_level"
+    | "overall"; // Added for Google Reviews
   rating: number; // 1-10 scale from Hostaway
   normalizedRating: number; // 1-5 scale for display
 }

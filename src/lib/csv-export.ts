@@ -159,9 +159,9 @@ export function exportReviewsToCSV(
 ): void {
   const exportData = reviews.map((item) => ({
     guest_name: item.review.guestName,
-    property_name: item.property?.name || "Unknown Property",
-    property_city: item.property?.city || "",
-    rating: item.review.rating || "",
+    property_name: item.property?.name ?? "Unknown Property",
+    property_city: item.property?.city ?? "",
+    rating: item.review.rating ?? "",
     comment: item.review.comment,
     channel: item.review.channel,
     review_type: item.review.reviewType,

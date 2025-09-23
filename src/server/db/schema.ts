@@ -162,8 +162,8 @@ export const reviewCategories = createTable(
       .varchar({ length: 255 })
       .notNull()
       .references(() => reviews.id, { onDelete: "cascade" }),
-    category: d.varchar({ length: 50 }).notNull(), // cleanliness, communication, etc.
-    rating: d.integer().notNull(), // 1-10 scale from Hostaway
+    category: d.varchar({ length: 50 }).notNull(), // cleanliness, communication, location, value, noise_level, overall
+    rating: d.integer().notNull(), // 1-10 scale from Hostaway/Google
     normalizedRating: d.numeric({ precision: 3, scale: 2 }), // 1-5 scale for display
   }),
   (t) => [
