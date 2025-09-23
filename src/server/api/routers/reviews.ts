@@ -19,7 +19,7 @@ import {
 
 // Input validation schemas
 const ReviewFiltersSchema = z.object({
-  rating: z.array(z.number().min(1).max(5)).optional(),
+  rating: z.array(z.number().min(1).max(10)).optional(),
   channel: z.enum(["hostaway", "google", "airbnb"]).optional(),
   reviewType: z.enum(["host-to-guest", "guest-to-host"]).optional(),
   status: z.enum(["published", "pending", "draft"]).optional(),
