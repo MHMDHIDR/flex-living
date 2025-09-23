@@ -140,7 +140,7 @@ export function ReviewsDashboard() {
           <Button
             onClick={handleSyncGoogle}
             disabled={syncGoogleMutation.isPending}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-red-600 hover:bg-red-700"
           >
             <RefreshCw
               className={`mr-2 size-4 ${syncGoogleMutation.isPending ? "animate-spin" : ""}`}
@@ -181,6 +181,13 @@ export function ReviewsDashboard() {
         dateRange={filters.dateRange}
       />
 
+      {/* Filter Controls */}
+      <FilterControls
+        filters={filters}
+        onFiltersChange={handleFilterChange}
+        isLoading={isLoading}
+      />
+
       {/* Property Overview */}
       <PropertyOverview
         data={propertiesData}
@@ -190,13 +197,6 @@ export function ReviewsDashboard() {
         }
         propertyId={filters.propertyId}
         dateRange={filters.dateRange}
-      />
-
-      {/* Filter Controls */}
-      <FilterControls
-        filters={filters}
-        onFiltersChange={handleFilterChange}
-        isLoading={isLoading}
       />
 
       {/* Bulk Actions */}

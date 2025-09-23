@@ -96,48 +96,47 @@ export function TrendAnalysis({ propertyId, dateRange }: TrendAnalysisProps) {
         )}
       </div>
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
         {trendData.topIssues.map((issue, index) => (
           <div
             key={issue.category}
-            className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-gray-50"
+            className="rounded-lg border p-4 transition-colors hover:bg-gray-50"
           >
-            <div className="flex items-center gap-3">
+            <div className="mb-3 flex items-center justify-between">
               {/* Issue Rank */}
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-700">
                 {index + 1}
               </div>
 
-              {/* Issue Details */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">
-                    {getIssueIcon(issue.averageRating)}
-                  </span>
-                  <h4 className="font-medium text-gray-900">
-                    {issue.displayName}
-                  </h4>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <span className="flex items-center gap-1">
-                    <TrendingDown className="h-3 w-3" />
-                    {issue.negativeReviews} negative review
-                    {issue.negativeReviews !== 1 ? "s" : ""}
-                  </span>
-                  <span>•</span>
-                  <span>Avg: {issue.averageRating.toFixed(1)}/5.0</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Issue Severity Badge */}
-            <div className="text-right">
+              {/* Issue Severity Badge */}
               <Badge
                 variant="outline"
                 className={`${getIssueColor(issue.averageRating)} border`}
               >
                 {issue.issuePercentage}% issues
               </Badge>
+            </div>
+
+            {/* Issue Details */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">
+                  {getIssueIcon(issue.averageRating)}
+                </span>
+                <h4 className="font-medium text-gray-900">
+                  {issue.displayName}
+                </h4>
+              </div>
+              <div className="space-y-1 text-sm text-gray-600">
+                <div className="flex items-center gap-1">
+                  <TrendingDown className="h-3 w-3" />
+                  <span>
+                    {issue.negativeReviews} negative review
+                    {issue.negativeReviews !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div>Avg: {issue.averageRating.toFixed(1)}/5.0</div>
+              </div>
             </div>
           </div>
         ))}
